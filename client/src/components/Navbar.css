@@ -1,0 +1,75 @@
+/* src/components/Navbar.css */
+
+/* General Navbar Styling */
+.navbar {
+  background-color: #007bff !important; /* Blue background */
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
+}
+
+/* Center the Nav Items */
+.navbar .container-fluid {
+  display: flex !important;
+  justify-content: center !important; /* Center horizontally */
+  align-items: center !important; /* Align vertically */
+}
+
+.navbar-nav {
+  display: flex !important;
+  justify-content: center !important; /* Center nav items */
+  align-items: center !important; /* Align nav items vertically */
+  gap: 1rem; /* Add spacing between nav items */
+}
+
+.navbar-nav .nav-item .nav-link {
+  color: white !important; /* Text color */
+  font-size: 0.9rem !important;
+  padding: 0.5rem 1rem !important;
+  transition: color 0.3s ease, background-color 0.3s ease !important;
+}
+
+.navbar-nav .nav-item .nav-link:hover {
+  color: #f0f8ff !important; /* Lighter text on hover */
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.1
+  ) !important; /* Slight background change */
+}
+
+.navbar-nav .nav-item.active .nav-link {
+  color: #f0f8ff !important; /* Highlight active link */
+  font-weight: bold !important;
+}
+
+/* Logout Button Styling */
+.navbar .btn-danger {
+  background-color: #dc3545 !important; /* Red button */
+  border-color: #dc3545 !important;
+  margin-left: 0 !important; /* Remove unnecessary margin */
+  padding: 0.375rem 0.75rem !important;
+  font-size: 0.9rem !important;
+  border-radius: 0.25rem !important;
+  transition: background-color 0.3s ease, transform 0.3s ease !important;
+}
+
+.navbar .btn-danger:hover {
+  background-color: #c82333 !important; /* Darker red on hover */
+  transform: scale(1.05) !important; /* Slight zoom effect */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .navbar-nav {
+    flex-direction: column !important; /* Stack items vertically on small screens */
+    align-items: center !important; /* Center items */
+  }
+
+  .navbar-nav .nav-item {
+    margin-bottom: 0.5rem !important; /* Add spacing between items */
+  }
+
+  .navbar-toggler-icon {
+    background-color: white !important;
+  }
+}
