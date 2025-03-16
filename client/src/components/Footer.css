@@ -1,0 +1,34 @@
+/* src/components/Footer.css */
+
+/* Sticky Footer Styling */
+html,
+body {
+  height: 100%; /* Ensure the HTML and body take up the full height of the viewport */
+  margin: 0; /* Remove default margins */
+}
+
+/* Flexbox Layout for Sticky Footer */
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* Ensure the app takes at least the full viewport height */
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1 0 auto; /* Allow the main content to grow and push the footer down */
+}
+
+/* Footer Styling */
+.footer {
+  flex-shrink: 0; /* Prevent the footer from shrinking */
+  background-color: #f8f9fa; /* Light background color */
+  padding-top: 1rem; /* Add some spacing */
+  padding-bottom: 1rem; /* Add some spacing */
+}
+
+/* Optional: Style for the copyright text */
+.footer .text-center {
+  font-size: 0.9rem;
+  color: #6c757d; /* Gray text color */
+}

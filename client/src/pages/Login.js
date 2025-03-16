@@ -22,10 +22,10 @@ const Login = () => {
         }),
         onSubmit: async (values) => {
             try {
-                await login(values);
-                navigate('/dashboard');
+                await login(values); // Call the login function from AuthContext
+                navigate('/dashboard'); // Redirect to dashboard on success
             } catch (error) {
-                alert('Login failed. Please check your credentials.');
+                alert(error.message || 'Login failed. Please check your credentials.');
             }
         },
     });
