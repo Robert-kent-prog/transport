@@ -14,6 +14,6 @@ const router = express.Router();
 router.post('/create', verifyDriver, verifyJWT, createRide);
 
 // Get all rides
-router.get('/all', getAllRides);
+router.get('/all', verifyJWT, getAllRides);
 
 export default router;
