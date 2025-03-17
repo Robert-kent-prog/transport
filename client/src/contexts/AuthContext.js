@@ -1,56 +1,56 @@
-// src/contexts/AuthContext.js
-
 import React, { createContext, useState, useEffect } from 'react';
 
 export const AuthContext = createContext();
-
-const hardcodedCredentials = {
-    email: "admin@gmail.com",
-    password: "password123",
-};
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
 
-    // Simulate fetching user data (e.g., on page refresh)
     useEffect(() => {
         const fetchUser = () => {
-            // Simulate checking if the user is already logged in
             const storedUser = localStorage.getItem("user");
             if (storedUser) {
-                setUser(JSON.parse(storedUser)); // Set the user from localStorage
+                setUser(JSON.parse(storedUser));
             }
-            setLoading(false); // Mark loading as complete
+            setLoading(false);
         };
-
         fetchUser();
     }, []);
 
-    // Hardcoded login function
     const loginAction = async (credentials) => {
-        return new Promise((resolve, reject) => {
-            if (
-                credentials.email === hardcodedCredentials.email &&
-                credentials.password === hardcodedCredentials.password
-            ) {
-                const userData = { email: credentials.email }; // Simulate user data
-                setUser(userData); // Set the logged-in user
-                localStorage.setItem("user", JSON.stringify(userData)); // Store user in localStorage
-                resolve(); // Resolve the promise for successful login
-            } else {
-                reject(new Error("Invalid email or password")); // Reject the promise for failed login
+        try {
+            const response = await fetch("http://localhost:5000/api/auth/login", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(credentials),
+            });
+
+            if (!response.ok) {
+                throw new Error("Invalid email or password");
             }
-        });
+
+            const data = await response.json();
+            const userData = {
+                email: data.user.email,
+                token: data.token,
+                role: data.user.role,  // Assuming backend returns user role
+            };
+
+            setUser(userData);
+            localStorage.setItem("user", JSON.stringify(userData));
+        } catch (error) {
+            throw error;
+        }
     };
 
-    // Hardcoded logout function
     const logoutAction = () => {
-        setUser(null); // Clear the logged-in user
-        localStorage.removeItem("user"); // Remove user from localStorage
+        setUser(null);
+        localStorage.removeItem("user");
     };
 
-    if (loading) return null; // Show nothing while loading
+    if (loading) return null;
 
     return (
         <AuthContext.Provider value={{ user, login: loginAction, logout: logoutAction }}>
