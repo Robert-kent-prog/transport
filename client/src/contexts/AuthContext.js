@@ -18,8 +18,8 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const loginAction = async (credentials) => {
-        if (!credentials || !credentials.identifier || !credentials.password) {
-            console.error("Invalid credentials object:", credentials);
+        if (!credentials?.identifier || !credentials?.password) {
+            window.alert("Identifier and password are required.");
             return Promise.reject(new Error("Identifier and password are required"));
         }
 
@@ -33,20 +33,29 @@ export const AuthProvider = ({ children }) => {
             });
 
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "Login failed. Please check your credentials.");
+                let errorMessage = "Login failed. Please check your credentials.";
+
+                try {
+                    const errorData = await response.json();
+                    errorMessage = errorData.error || errorMessage;
+                } catch (jsonError) {
+                    console.warn("Error parsing JSON response:", jsonError);
+                }
+
+                window.alert(errorMessage); // Show an alert for invalid login
+                throw new Error(errorMessage);
             }
 
             const userData = await response.json();
             setUser(userData);
             localStorage.setItem("user", JSON.stringify(userData));
 
-            return Promise.resolve();
         } catch (error) {
             console.error("Login error:", error);
             return Promise.reject(error);
         }
     };
+
 
 
     const logoutAction = () => {
