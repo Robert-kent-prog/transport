@@ -5,16 +5,15 @@ import User from '../models/User.js';
 
 export const createRide = async (req, res) => {
     try {
-        const { pickupLocation, dropoffLocation, departureTime, arrivalTime, availableSeats } = req.body;
-        const userId = req.user.id; // Authenticated user ID from middleware
+        console.log('User from req:', req.user); // Debugging
 
-        // Ensure the user is a driver
-        const driver = await User.findById(userId).select('role'); // Fetch only the role field
-        if (!driver || driver.role !== 'driver') {
-            return res.status(403).json({ error: 'Only drivers can create rides.' });
+        if (!req.user) {
+            return res.status(401).json({ error: 'Unauthorized. User not found in request.' });
         }
 
-        // Create the ride without car details
+        const { pickupLocation, dropoffLocation, departureTime, arrivalTime, availableSeats } = req.body;
+        const userId = req.user._id;
+
         const newRide = new Ride({
             driver: userId,
             pickupLocation,
@@ -25,10 +24,8 @@ export const createRide = async (req, res) => {
         });
 
         await newRide.save();
-
-        // Populate car details dynamically when retrieving the ride
         const savedRide = await Ride.findById(newRide._id)
-            .populate('driver', 'name role carDetails') // Include driver's name, role, and car details
+            .populate('driver', 'name role carDetails')
             .exec();
 
         res.status(201).json({ message: 'Ride created successfully', ride: savedRide });
