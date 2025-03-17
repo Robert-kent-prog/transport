@@ -18,32 +18,36 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const loginAction = async (credentials) => {
+        if (!credentials || !credentials.identifier || !credentials.password) {
+            console.error("Invalid credentials object:", credentials);
+            return Promise.reject(new Error("Identifier and password are required"));
+        }
+
         try {
-            const response = await fetch("http://localhost:5000/api/auth/login", {
+            console.log("Sending login request with:", credentials);
+
+            const response = await fetch("http://20.0.25.50:5000/api/authenticate/login", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(credentials),
             });
 
             if (!response.ok) {
-                throw new Error("Invalid email or password");
+                const errorData = await response.json();
+                throw new Error(errorData.error || "Login failed. Please check your credentials.");
             }
 
-            const data = await response.json();
-            const userData = {
-                email: data.user.email,
-                token: data.token,
-                role: data.user.role,  // Assuming backend returns user role
-            };
-
+            const userData = await response.json();
             setUser(userData);
             localStorage.setItem("user", JSON.stringify(userData));
+
+            return Promise.resolve();
         } catch (error) {
-            throw error;
+            console.error("Login error:", error);
+            return Promise.reject(error);
         }
     };
+
 
     const logoutAction = () => {
         setUser(null);

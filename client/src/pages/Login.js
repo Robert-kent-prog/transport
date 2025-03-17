@@ -1,10 +1,7 @@
-// src/pages/Login.jsx
-
-import React from 'react';
+import React, { useContext } from 'react';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import { useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
 import { AuthContext } from '../contexts/AuthContext';
 
 const Login = () => {
@@ -22,18 +19,23 @@ const Login = () => {
         }),
         onSubmit: async (values) => {
             try {
-                await login(values); // Call the login function from AuthContext
-                navigate('/dashboard'); // Redirect to dashboard on success
+                const credentials = {
+                    identifier: values.email, // Backend expects "identifier" instead of "email"
+                    password: values.password,
+                };
+
+                await login(credentials);
+                navigate('/dashboard');
             } catch (error) {
                 alert(error.message || 'Login failed. Please check your credentials.');
             }
         },
+
     });
 
     return (
         <div className="container mt-5">
             <h2>Login</h2>
-            {/* Use Bootstrap's form classes */}
             <form onSubmit={formik.handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">
@@ -47,9 +49,9 @@ const Login = () => {
                         onChange={formik.handleChange}
                         className={`form-control ${formik.touched.email && formik.errors.email ? 'is-invalid' : ''}`}
                     />
-                    {formik.touched.email && formik.errors.email ? (
+                    {formik.touched.email && formik.errors.email && (
                         <div className="invalid-feedback">{formik.errors.email}</div>
-                    ) : null}
+                    )}
                 </div>
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">
@@ -63,9 +65,9 @@ const Login = () => {
                         onChange={formik.handleChange}
                         className={`form-control ${formik.touched.password && formik.errors.password ? 'is-invalid' : ''}`}
                     />
-                    {formik.touched.password && formik.errors.password ? (
+                    {formik.touched.password && formik.errors.password && (
                         <div className="invalid-feedback">{formik.errors.password}</div>
-                    ) : null}
+                    )}
                 </div>
                 <button type="submit" className="btn btn-primary">
                     Login
