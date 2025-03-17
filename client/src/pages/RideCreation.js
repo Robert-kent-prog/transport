@@ -1,64 +1,73 @@
 // src/pages/RideCreation.jsx
 
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import axios from 'axios'; // For API calls
 import { MapContext } from '../contexts/MapContext';
 
 const RideCreation = () => {
-    const { currentLocation, setCurrentLocation, destination, setDestination, routeDetails } =
+    const { routeDetails } =
         useContext(MapContext);
 
-    // State for new fields: Departure Time, Arrival Time, Available Seats, and Car Details
+    // State for new fields: Departure Time, Arrival Time, Available Seats, and fetched car details
     const [departureTime, setDepartureTime] = useState('');
     const [arrivalTime, setArrivalTime] = useState('');
+    const [currentLocation, setCurrentLocation] = useState('');
+    const [destination, setDestination] = useState('');
     const [availableSeats, setAvailableSeats] = useState('');
-    const [carMake, setCarMake] = useState(''); // Car Make
-    const [carModel, setCarModel] = useState(''); // Car Model
-    const [licensePlate, setLicensePlate] = useState(''); // License Plate
+    const [driverDetails, setDriverDetails] = useState(null); // To store fetched driver details
 
-    const handleSubmit = (e) => {
+    useEffect(() => {
+        // Fetch driver details from the backend on component mount
+        const fetchDriverDetails = async () => {
+            try {
+                const response = await axios.get('/api/users/me'); // Endpoint to fetch authenticated user details
+                setDriverDetails(response.data);
+            } catch (error) {
+                console.error('Error fetching driver details:', error);
+            }
+        };
+
+        fetchDriverDetails();
+    }, []);
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
         // Validate inputs
-        if (
-            !currentLocation ||
-            !destination ||
-            !departureTime ||
-            !arrivalTime ||
-            !availableSeats ||
-            !carMake ||
-            !carModel ||
-            !licensePlate
-        ) {
-            alert('Please fill in all fields.');
+        if (!currentLocation || !destination || !departureTime || !arrivalTime || !availableSeats) {
+            alert('Please fill in all required fields.');
             return;
         }
 
-        // Log the ride details
-        console.log('Creating ride:', {
-            location: currentLocation,
-            destination,
-            departureTime,
-            arrivalTime,
+        // Prepare the ride payload
+        const ridePayload = {
+            pickupLocation: currentLocation,
+            dropoffLocation: destination,
+            departureTime: `${new Date().toISOString().split('T')[0]}T${departureTime}:00`, // Format departure time
+            arrivalTime: `${new Date().toISOString().split('T')[0]}T${arrivalTime}:00`, // Format arrival time
             availableSeats: parseInt(availableSeats, 10), // Convert to number
-            carDetails: {
-                make: carMake,
-                model: carModel,
-                licensePlate,
-            },
-            eta: routeDetails?.legs[0]?.duration.text || 'Not available',
-            distance: routeDetails?.legs[0]?.distance.text || 'Not available',
-        });
+        };
 
-        // Reset form fields (optional)
-        // setCurrentLocation('');
-        // setDestination('');
-        // setDepartureTime('');
-        // setArrivalTime('');
-        // setAvailableSeats('');
-        // setCarMake('');
-        // setCarModel('');
-        // setLicensePlate('');
+        try {
+            // Send the ride creation request to the backend
+            await axios.post('/api/rides/create', ridePayload);
+
+            alert('Ride created successfully!');
+            // Reset form fields after successful submission
+            setCurrentLocation('');
+            setDestination('');
+            setDepartureTime('');
+            setArrivalTime('');
+            setAvailableSeats('');
+        } catch (error) {
+            alert('Failed to create ride. Please try again.');
+            console.error('Error creating ride:', error.response?.data || error.message);
+        }
     };
+
+    if (!driverDetails || driverDetails.role !== 'driver') {
+        return <div>Loading...</div>; // Wait for driver details or restrict access if not a driver
+    }
 
     return (
         <div className="container mt-5">
@@ -143,52 +152,24 @@ const RideCreation = () => {
                     />
                 </div>
 
-                {/* Car Make Field */}
+                {/* Display Car Details (Read-Only) */}
                 <div className="mb-3">
-                    <label htmlFor="carMake" className="form-label">
-                        Car Make
-                    </label>
-                    <input
-                        type="text"
-                        id="carMake"
-                        className="form-control"
-                        value={carMake}
-                        onChange={(e) => setCarMake(e.target.value)}
-                        placeholder="Enter car make (e.g., Toyota)"
-                        required
-                    />
-                </div>
-
-                {/* Car Model Field */}
-                <div className="mb-3">
-                    <label htmlFor="carModel" className="form-label">
-                        Car Model
-                    </label>
-                    <input
-                        type="text"
-                        id="carModel"
-                        className="form-control"
-                        value={carModel}
-                        onChange={(e) => setCarModel(e.target.value)}
-                        placeholder="Enter car model (e.g., Camry)"
-                        required
-                    />
-                </div>
-
-                {/* License Plate Field */}
-                <div className="mb-3">
-                    <label htmlFor="licensePlate" className="form-label">
-                        License Plate
-                    </label>
-                    <input
-                        type="text"
-                        id="licensePlate"
-                        className="form-control"
-                        value={licensePlate}
-                        onChange={(e) => setLicensePlate(e.target.value)}
-                        placeholder="Enter license plate (e.g., ABC123)"
-                        required
-                    />
+                    <p>
+                        <strong>Car Make:</strong>{' '}
+                        {driverDetails.carDetails?.make || 'Not available'}
+                    </p>
+                    <p>
+                        <strong>Car Model:</strong>{' '}
+                        {driverDetails.carDetails?.model || 'Not available'}
+                    </p>
+                    <p>
+                        <strong>License Plate:</strong>{' '}
+                        {driverDetails.carDetails?.licensePlate || 'Not available'}
+                    </p>
+                    <p>
+                        <strong>Seating Capacity:</strong>{' '}
+                        {driverDetails.carDetails?.seatingCapacity || 'Not available'}
+                    </p>
                 </div>
 
                 {/* Display ETA and Distance if route details are available */}
@@ -214,10 +195,7 @@ const RideCreation = () => {
                         !destination ||
                         !departureTime ||
                         !arrivalTime ||
-                        !availableSeats ||
-                        !carMake ||
-                        !carModel ||
-                        !licensePlate
+                        !availableSeats
                     }
                 >
                     Create Ride
