@@ -1,21 +1,20 @@
 // src/pages/RideCreation.jsx
 
-import React, { useContext, useState, useEffect } from 'react';
-import axios from 'axios'; // For API calls
+import React, { useContext, useState } from 'react';
+// import axios from 'axios'; // For API calls
 import { MapContext } from '../contexts/MapContext';
 
 const RideCreation = () => {
-    const { routeDetails } =
-        useContext(MapContext);
+    const { routeDetails } = useContext(MapContext);
 
-    // State for new fields: Departure Time, Arrival Time, Available Seats, and fetched car details
+    // State for new fields: Departure Time, Arrival Time, Available Seats
     const [departureTime, setDepartureTime] = useState('');
     const [arrivalTime, setArrivalTime] = useState('');
     const [currentLocation, setCurrentLocation] = useState('');
     const [destination, setDestination] = useState('');
     const [availableSeats, setAvailableSeats] = useState('');
-    const [driverDetails, setDriverDetails] = useState(null); // To store fetched driver details
 
+    /*
     useEffect(() => {
         // Fetch driver details from the backend on component mount
         const fetchDriverDetails = async () => {
@@ -29,7 +28,9 @@ const RideCreation = () => {
 
         fetchDriverDetails();
     }, []);
+    */
 
+    /*
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -64,16 +65,16 @@ const RideCreation = () => {
             console.error('Error creating ride:', error.response?.data || error.message);
         }
     };
-
-    if (!driverDetails || driverDetails.role !== 'driver') {
-        return <div>Loading...</div>; // Wait for driver details or restrict access if not a driver
-    }
+    */
+    // if (!driverDetails || driverDetails.role !== 'driver') {
+    //     return <div>Loading...</div>; // Wait for driver details or restrict access if not a driver
+    // }
 
     return (
         <div className="container mt-5">
             <h2>Create a Ride</h2>
             {/* Use Bootstrap's form classes */}
-            <form onSubmit={handleSubmit}>
+            <form>
                 {/* Current Location Field */}
                 <div className="mb-3">
                     <label htmlFor="currentLocation" className="form-label">
@@ -152,25 +153,15 @@ const RideCreation = () => {
                     />
                 </div>
 
-                {/* Display Car Details (Read-Only) */}
+                {/* 
+                Display Car Details (Read-Only)
                 <div className="mb-3">
-                    <p>
-                        <strong>Car Make:</strong>{' '}
-                        {driverDetails.carDetails?.make || 'Not available'}
-                    </p>
-                    <p>
-                        <strong>Car Model:</strong>{' '}
-                        {driverDetails.carDetails?.model || 'Not available'}
-                    </p>
-                    <p>
-                        <strong>License Plate:</strong>{' '}
-                        {driverDetails.carDetails?.licensePlate || 'Not available'}
-                    </p>
-                    <p>
-                        <strong>Seating Capacity:</strong>{' '}
-                        {driverDetails.carDetails?.seatingCapacity || 'Not available'}
-                    </p>
+                    <p><strong>Car Make:</strong> {driverDetails?.carDetails?.make || 'Not available'}</p>
+                    <p><strong>Car Model:</strong> {driverDetails?.carDetails?.model || 'Not available'}</p>
+                    <p><strong>License Plate:</strong> {driverDetails?.carDetails?.licensePlate || 'Not available'}</p>
+                    <p><strong>Seating Capacity:</strong> {driverDetails?.carDetails?.seatingCapacity || 'Not available'}</p>
                 </div>
+                */}
 
                 {/* Display ETA and Distance if route details are available */}
                 {routeDetails && (
