@@ -37,3 +37,18 @@ export const createRide = async (req, res) => {
         res.status(500).json({ error: error.message });
     }
 };
+
+// Function to fetch all rides
+export const getAllRides = async (req, res) => {
+    try {
+        // Fetch all rides and populate driver details
+        const rides = await Ride.find()
+            .populate('driver', 'name role carDetails') // Include driver's name, role, and car details
+            .exec();
+
+        res.status(200).json(rides);
+    } catch (error) {
+        console.error('Error fetching rides:', error);
+        res.status(500).json({ error: error.message });
+    }
+};
