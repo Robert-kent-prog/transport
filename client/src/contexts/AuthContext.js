@@ -1,10 +1,12 @@
 import React, { createContext, useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUser = () => {
@@ -24,8 +26,6 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
-            console.log("Sending login request with:", credentials);
-
             const response = await fetch("http://20.0.25.50:5000/api/authenticate/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -42,11 +42,19 @@ export const AuthProvider = ({ children }) => {
                     console.warn("Error parsing JSON response:", jsonError);
                 }
 
-                window.alert(errorMessage); // Show an alert for invalid login
+                window.alert(errorMessage);
                 throw new Error(errorMessage);
             }
 
             const userData = await response.json();
+
+            // Extract the token and save it in localStorage
+            if (userData?.AccessToken) {
+                localStorage.setItem("accessToken", userData.AccessToken);
+            } else {
+                console.warn("AccessToken not received from server.");
+            }
+
             setUser(userData);
             localStorage.setItem("user", JSON.stringify(userData));
 
@@ -56,11 +64,11 @@ export const AuthProvider = ({ children }) => {
         }
     };
 
-
-
     const logoutAction = () => {
         setUser(null);
         localStorage.removeItem("user");
+        localStorage.removeItem("accessToken");
+        navigate('/login');
     };
 
     if (loading) return null;
