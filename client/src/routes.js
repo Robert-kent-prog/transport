@@ -12,6 +12,8 @@ import BookingConfirmation from './pages/BookingConfirmation';
 import DriverProfile from './pages/DriverProfile';
 import RealTimeTracking from './pages/RealTimeTracking';
 import Chat from './pages/Chat';
+import AboutUs from './pages/AboutPage';
+import ContactUs from './pages/ContactPage';
 
 const Router = () => {
     return (
@@ -27,6 +29,8 @@ const Router = () => {
             <Route path="/driver-profile/:driverId" element={<DriverProfile />} />
             <Route path="/real-time-tracking/:rideId" element={<RealTimeTracking />} />
             <Route path="/chat/:driverId" element={<Chat />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/contact-us" element={<ContactUs />} />
         </Routes>
     );
 };
