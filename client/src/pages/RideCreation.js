@@ -27,15 +27,12 @@ const RideCreation = () => {
                     console.error('No access token found in localStorage');
                     return;
                 }
-                console.log('the access token is', accessToken);
 
                 // Decode the access token to get user ID and role
                 const decodedToken = jwtDecode(accessToken);
                 const userId = decodedToken.userId; // Assuming the token contains a `userId` field
                 const role = decodedToken.role; // Assuming the token contains a `role` field
 
-                console.log('the arole', role);
-                console.log('the userid decoded is', userId);
                 // Check if the user is a driver
                 if (role !== 'driver') {
                     console.error('User is not a driver');
@@ -45,7 +42,6 @@ const RideCreation = () => {
                 // Fetch driver details using the user ID
                 const response = await axios.get(`http://20.0.161.221:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
                 setDriverDetails(response.data); // Set the fetched driver details in state
-                console.log('the fetched driver details is', response.data);
             } catch (error) {
                 console.error('Error fetching driver details:', error);
             }
