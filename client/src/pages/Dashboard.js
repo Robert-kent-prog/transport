@@ -7,8 +7,20 @@ const DriverDashboard = () => {
     // Fetch rides from the backend when the component mounts
     useEffect(() => {
         const fetchRides = async () => {
+            // Retrieve the access token from localStorage
+            const accessToken = localStorage.getItem('accessToken');
+            if (!accessToken) {
+                console.error('No access token found in localStorage');
+                alert('You are not authenticated. Please log in.');
+                return;
+            }
+
             try {
-                const response = await axios.get('http://20.0.161.221:5000/api/rides/all'); // Replace with your backend URL
+                const response = await axios.get('http://20.0.161.221:5000/api/rides/all', {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
+                    },
+                });
                 setRides(response.data); // Store the fetched rides in state
             } catch (error) {
                 console.error('Error fetching rides:', error.response?.data || error.message);
