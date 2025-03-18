@@ -1,36 +1,59 @@
 // src/pages/RideCreation.jsx
 
-import React, { useContext, useState } from 'react';
-// import axios from 'axios'; // For API calls
+import React, { useContext, useState, useEffect } from 'react';
+import axios from 'axios'; // For API calls
 import { MapContext } from '../contexts/MapContext';
+import { jwtDecode } from "jwt-decode";
 
 const RideCreation = () => {
-    const { routeDetails } = useContext(MapContext);
+    const { routeDetails } =
+        useContext(MapContext);
 
-    // State for new fields: Departure Time, Arrival Time, Available Seats
+    // State for new fields: Departure Time, Arrival Time, Available Seats, and fetched car details
     const [departureTime, setDepartureTime] = useState('');
     const [arrivalTime, setArrivalTime] = useState('');
     const [currentLocation, setCurrentLocation] = useState('');
     const [destination, setDestination] = useState('');
     const [availableSeats, setAvailableSeats] = useState('');
+    const [driverDetails, setDriverDetails] = useState(null); // To store fetched driver details
 
-    /*
     useEffect(() => {
         // Fetch driver details from the backend on component mount
         const fetchDriverDetails = async () => {
             try {
-                const response = await axios.get('/api/users/me'); // Endpoint to fetch authenticated user details
-                setDriverDetails(response.data);
+                // Retrieve the access token from localStorage
+                const accessToken = localStorage.getItem('accessToken');
+                if (!accessToken) {
+                    console.error('No access token found in localStorage');
+                    return;
+                }
+                console.log('the access token is', accessToken);
+
+                // Decode the access token to get user ID and role
+                const decodedToken = jwtDecode(accessToken);
+                const userId = decodedToken.userId; // Assuming the token contains a `userId` field
+                const role = decodedToken.role; // Assuming the token contains a `role` field
+
+                console.log('the arole', role);
+                console.log('the userid decoded is', userId);
+                // Check if the user is a driver
+                if (role !== 'driver') {
+                    console.error('User is not a driver');
+                    return;
+                }
+
+                // Fetch driver details using the user ID
+                const response = await axios.get(`http://20.0.161.221:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
+                setDriverDetails(response.data); // Set the fetched driver details in state
+                console.log('the fetched driver details is', response.data);
             } catch (error) {
                 console.error('Error fetching driver details:', error);
             }
         };
 
         fetchDriverDetails();
-    }, []);
-    */
+    }, []); // Empty dependency array ensures this runs only once when the component mounts
 
-    /*
     const handleSubmit = async (e) => {
         e.preventDefault();
 
@@ -50,8 +73,24 @@ const RideCreation = () => {
         };
 
         try {
-            // Send the ride creation request to the backend
-            await axios.post('/api/rides/create', ridePayload);
+            // Retrieve the access token from localStorage
+            const accessToken = localStorage.getItem('accessToken');
+            if (!accessToken) {
+                console.error('No access token found in localStorage');
+                alert('You are not authenticated. Please log in.');
+                return;
+            }
+
+            // Send the ride creation request to the backend with the Authorization header
+            await axios.post(
+                'http://20.0.161.221:5000/api/rides/create',
+                ridePayload,
+                {
+                    headers: {
+                        Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
+                    },
+                }
+            );
 
             alert('Ride created successfully!');
             // Reset form fields after successful submission
@@ -65,16 +104,16 @@ const RideCreation = () => {
             console.error('Error creating ride:', error.response?.data || error.message);
         }
     };
-    */
-    // if (!driverDetails || driverDetails.role !== 'driver') {
-    //     return <div>Loading...</div>; // Wait for driver details or restrict access if not a driver
-    // }
+
+    if (!driverDetails || driverDetails.role !== 'driver') {
+        return <div>Loading...</div>; // Wait for driver details or restrict access if not a driver
+    }
 
     return (
         <div className="container mt-5">
             <h2>Create a Ride</h2>
             {/* Use Bootstrap's form classes */}
-            <form>
+            <form onSubmit={handleSubmit}>
                 {/* Current Location Field */}
                 <div className="mb-3">
                     <label htmlFor="currentLocation" className="form-label">
@@ -153,15 +192,25 @@ const RideCreation = () => {
                     />
                 </div>
 
-                {/* 
-                Display Car Details (Read-Only)
+                {/* Display Car Details (Read-Only) */}
                 <div className="mb-3">
-                    <p><strong>Car Make:</strong> {driverDetails?.carDetails?.make || 'Not available'}</p>
-                    <p><strong>Car Model:</strong> {driverDetails?.carDetails?.model || 'Not available'}</p>
-                    <p><strong>License Plate:</strong> {driverDetails?.carDetails?.licensePlate || 'Not available'}</p>
-                    <p><strong>Seating Capacity:</strong> {driverDetails?.carDetails?.seatingCapacity || 'Not available'}</p>
+                    <p>
+                        <strong>Car Make:</strong>{' '}
+                        {driverDetails.carDetails?.make || 'Not available'}
+                    </p>
+                    <p>
+                        <strong>Car Model:</strong>{' '}
+                        {driverDetails.carDetails?.model || 'Not available'}
+                    </p>
+                    <p>
+                        <strong>License Plate:</strong>{' '}
+                        {driverDetails.carDetails?.licensePlate || 'Not available'}
+                    </p>
+                    <p>
+                        <strong>Seating Capacity:</strong>{' '}
+                        {driverDetails.carDetails?.seatingCapacity || 'Not available'}
+                    </p>
                 </div>
-                */}
 
                 {/* Display ETA and Distance if route details are available */}
                 {routeDetails && (
