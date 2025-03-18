@@ -1,12 +1,29 @@
-// src/pages/Dashboard.jsx
-
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 
 const DriverDashboard = () => {
-    const rides = [
-        { id: 1, location: 'Home', destination: 'Work', atime: '7:00 AM', dtime: '8:00 AM', seats: 2 },
-        { id: 2, location: 'Work', destination: 'Home', atime: '5:00 PM', dtime: '9:00 AM', seats: 3 },
-    ];
+    const [rides, setRides] = useState([]); // State to store fetched rides
+
+    // Fetch rides from the backend when the component mounts
+    useEffect(() => {
+        const fetchRides = async () => {
+            try {
+                const response = await axios.get('http://20.0.161.221:5000/api/rides/all'); // Replace with your backend URL
+                setRides(response.data); // Store the fetched rides in state
+            } catch (error) {
+                console.error('Error fetching rides:', error.response?.data || error.message);
+                alert('Failed to fetch rides. Please try again.');
+            }
+        };
+
+        fetchRides();
+    }, []);
+
+    // Handle "BookOnPay" button click
+    const handleBookOnPay = (rideId) => {
+        alert(`Booking ride with ID: ${rideId}`);
+        // You can redirect to a booking page or trigger a payment process here
+    };
 
     return (
         <div className="container mt-5">
@@ -18,20 +35,30 @@ const DriverDashboard = () => {
                         <th>ID</th>
                         <th>Location</th>
                         <th>Destination</th>
-                        <th>Depature Time</th>
+                        <th>Departure Time</th>
                         <th>Arrival Time</th>
                         <th>Available Seats</th>
+                        <th>Bookings</th> {/* New column for BookOnPay button */}
                     </tr>
                 </thead>
                 <tbody>
                     {rides.map((ride) => (
-                        <tr key={ride.id}>
-                            <td>{ride.id}</td>
-                            <td>{ride.location}</td>
-                            <td>{ride.destination}</td>
-                            <td>{ride.atime}</td>
-                            <td>{ride.dtime}</td>
-                            <td>{ride.seats}</td>
+                        <tr key={ride._id}>
+                            <td>{ride._id}</td> {/* Ride ID */}
+                            <td>{ride.pickupLocation}</td>
+                            <td>{ride.dropoffLocation}</td>
+                            <td>{new Date(ride.departureTime).toLocaleTimeString()}</td>
+                            <td>{new Date(ride.arrivalTime).toLocaleTimeString()}</td>
+                            <td>{ride.availableSeats}</td>
+                            <td>
+                                {/* BookOnPay button */}
+                                <button
+                                    className="btn btn-primary"
+                                    onClick={() => handleBookOnPay(ride._id)}
+                                >
+                                    BookOnPay
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
