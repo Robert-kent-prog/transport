@@ -53,7 +53,7 @@ const NavbarComponent = () => {
                                     className="nav-link"
                                     to="/dashboard"
                                 >
-                                    Dashboard
+                                    Driver Dashboard
                                 </NavLink>
                             </li>
 
@@ -79,16 +79,7 @@ const NavbarComponent = () => {
                                 </NavLink>
                             </li>
 
-                            {/* Ride Search (Passenger) */}
-                            <li className="nav-item">
-                                <NavLink
-                                    activeClassName="active"
-                                    className="nav-link"
-                                    to="/ride-search"
-                                >
-                                    Ride Search
-                                </NavLink>
-                            </li>
+
 
                             {/* Logout Button */}
                             <li className="nav-item">

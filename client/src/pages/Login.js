@@ -34,8 +34,8 @@ const Login = () => {
     });
 
     return (
-        <div className="container mt-5">
-            <h2>Login</h2>
+        <div className="container mt-5" style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h1 className="text-center" style={{ fontSize: '39px', fontWeight: "700" }}>Login</h1>
             <form onSubmit={formik.handleSubmit}>
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">

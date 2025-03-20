@@ -7,7 +7,6 @@ import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const navigate = useNavigate();
-
     // State to track the selected role
     const [role, setRole] = useState('passenger'); // Default role is "passenger"
 
@@ -58,10 +57,8 @@ const Register = () => {
                         },
                     }),
                 };
-
                 // Send the registration request to the backend
                 const response = await axios.post('http://20.0.161.221:5000/api/auth/register', payload);
-
                 // Handle successful registration
                 console.log(response.data);
                 alert('Registration successful!');
@@ -73,9 +70,10 @@ const Register = () => {
             }
         },
     });
+
     return (
-        <div className="container mt-5">
-            <h2>Register</h2>
+        <div className="container mt-5" style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h1 className="text-center" style={{ fontSize: '39px', fontWeight: "700" }}>Register</h1>
             <form onSubmit={formik.handleSubmit}>
                 {/* Name Field */}
                 <div className="mb-3">
@@ -94,7 +92,6 @@ const Register = () => {
                         <div className="invalid-feedback">{formik.errors.name}</div>
                     ) : null}
                 </div>
-
                 {/* Email Field */}
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">
@@ -112,7 +109,6 @@ const Register = () => {
                         <div className="invalid-feedback">{formik.errors.email}</div>
                     ) : null}
                 </div>
-
                 {/* Phone Field */}
                 <div className="mb-3">
                     <label htmlFor="phone" className="form-label">
@@ -130,7 +126,6 @@ const Register = () => {
                         <div className="invalid-feedback">{formik.errors.phone}</div>
                     ) : null}
                 </div>
-
                 {/* Password Field */}
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">
@@ -148,7 +143,6 @@ const Register = () => {
                         <div className="invalid-feedback">{formik.errors.password}</div>
                     ) : null}
                 </div>
-
                 {/* Confirm Password Field */}
                 <div className="mb-3">
                     <label htmlFor="confirmPassword" className="form-label">
@@ -166,7 +160,6 @@ const Register = () => {
                         <div className="invalid-feedback">{formik.errors.confirmPassword}</div>
                     ) : null}
                 </div>
-
                 {/* Role Selection Dropdown */}
                 <div className="mb-3">
                     <label htmlFor="role" className="form-label">
@@ -185,7 +178,6 @@ const Register = () => {
                         <option value="driver">Driver</option>
                     </select>
                 </div>
-
                 {/* Car Details Fields (for drivers only) */}
                 {role === 'driver' && (
                     <>
@@ -206,7 +198,6 @@ const Register = () => {
                                 <div className="invalid-feedback">{formik.errors.carMake}</div>
                             ) : null}
                         </div>
-
                         {/* Car Model */}
                         <div className="mb-3">
                             <label htmlFor="carModel" className="form-label">
@@ -224,7 +215,6 @@ const Register = () => {
                                 <div className="invalid-feedback">{formik.errors.carModel}</div>
                             ) : null}
                         </div>
-
                         {/* License Plate */}
                         <div className="mb-3">
                             <label htmlFor="licensePlate" className="form-label">
@@ -242,7 +232,6 @@ const Register = () => {
                                 <div className="invalid-feedback">{formik.errors.licensePlate}</div>
                             ) : null}
                         </div>
-
                         {/* Seating Capacity */}
                         <div className="mb-3">
                             <label htmlFor="seatingCapacity" className="form-label">
@@ -263,15 +252,13 @@ const Register = () => {
                         </div>
                     </>
                 )}
-
                 {/* Submit Button */}
-                <button type="submit" className="btn btn-primary">
+                <button type="submit" className="btn btn-primary w-100">
                     Register
                 </button>
             </form>
-
             {/* Already have an account? Login */}
-            <p className="mt-3 text-left">
+            <p className="mt-3 text-center">
                 Already have an account?{' '}
                 <a href="/login" className="text-primary">
                     Login here

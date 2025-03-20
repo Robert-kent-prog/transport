@@ -1,5 +1,3 @@
-/* src/components/Footer.css */
-
 /* Sticky Footer Styling */
 html,
 body {
@@ -17,18 +15,22 @@ body {
 /* Main Content Area */
 .main-content {
   flex: 1 0 auto; /* Allow the main content to grow and push the footer down */
+  padding-bottom: 60px; /* Add padding to prevent overlap with the footer */
 }
 
 /* Footer Styling */
 .footer {
   flex-shrink: 0; /* Prevent the footer from shrinking */
+  width: 100%; /* Make it span the full width of the page */
   background-color: #f8f9fa; /* Light background color */
-  padding-top: 1rem; /* Add some spacing */
-  padding-bottom: 1rem; /* Add some spacing */
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for separation */
+  padding: 1rem 0; /* Add vertical padding for spacing */
+  text-align: center; /* Center align the footer content */
 }
 
-/* Optional: Style for the copyright text */
-.footer .text-center {
-  font-size: 0.9rem;
-  color: #6c757d; /* Gray text color */
+/* Responsive Design */
+@media (max-width: 768px) {
+  .footer {
+    font-size: 0.9rem; /* Reduce font size on smaller screens */
+  }
 }

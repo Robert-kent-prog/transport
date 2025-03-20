@@ -106,8 +106,8 @@ const RideCreation = () => {
     }
 
     return (
-        <div className="container mt-5">
-            <h2>Create a Ride</h2>
+        <div className="container mt-5" style={{ maxWidth: '600px', margin: '0 auto' }}>
+            <h2 className="text-center" style={{ fontSize: '39px', fontWeight: "700" }}>Create a Ride</h2>
             {/* Use Bootstrap's form classes */}
             <form onSubmit={handleSubmit}>
                 {/* Current Location Field */}
