@@ -7,13 +7,13 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import RideCreation from './pages/RideCreation';
 import PassengerDashboard from './pages/PassengerDashboard';
-
 import BookingConfirmation from './pages/BookingConfirmation';
 import DriverProfile from './pages/DriverProfile';
 import RealTimeTracking from './pages/RealTimeTracking';
 import Chat from './pages/Chat';
 import AboutUs from './pages/AboutPage';
 import ContactUs from './pages/ContactPage';
+import PaymentOptions from './pages/PaymentOptions';
 
 const Router = () => {
     return (
@@ -24,9 +24,10 @@ const Router = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create-ride" element={<RideCreation />} />
             <Route path="/passenger-dashboard" element={<PassengerDashboard />} />
+            <Route path="/payment-options/:rideId" element={<PaymentOptions />} />
+            <Route path="/driver-profile/:rideId" element={<DriverProfile />} />
 
             <Route path="/booking/:rideId" element={<BookingConfirmation />} />
-            <Route path="/driver-profile/:driverId" element={<DriverProfile />} />
             <Route path="/real-time-tracking/:rideId" element={<RealTimeTracking />} />
             <Route path="/chat/:driverId" element={<Chat />} />
             <Route path="/about-us" element={<AboutUs />} />

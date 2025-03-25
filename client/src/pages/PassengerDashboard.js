@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const DriverDashboard = () => {
     const [rides, setRides] = useState([]); // State to store fetched rides
     const [filteredRides, setFilteredRides] = useState([]); // State to store filtered rides
     const [pickupLocation, setPickupLocation] = useState(''); // State for pickup location input
     const [dropoffLocation, setDropoffLocation] = useState(''); // State for dropoff location input
+    const navigate = useNavigate();
 
     // Fetch rides from the backend when the component mounts
     useEffect(() => {
@@ -19,7 +21,7 @@ const DriverDashboard = () => {
             }
 
             try {
-                const response = await axios.get('http://20.0.161.221:5000/api/rides/all', {
+                const response = await axios.get('http://20.0.135.221:5000/api/rides/all', {
                     headers: {
                         Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
                     },
@@ -54,8 +56,7 @@ const DriverDashboard = () => {
 
     // Handle "BookOnPay" button click
     const handleBookOnPay = (rideId) => {
-        alert(`Booking ride with ID: ${rideId}`);
-        // You can redirect to a booking page or trigger a payment process here
+        navigate(`/payment-options/${rideId}`);
     };
 
     return (
@@ -99,6 +100,7 @@ const DriverDashboard = () => {
                         <th>Departure Time</th>
                         <th>Arrival Time</th>
                         <th>Available Seats</th>
+                        <th>Amount</th>
                         <th>Bookings</th> {/* New column for BookOnPay button */}
                     </tr>
                 </thead>
@@ -112,6 +114,7 @@ const DriverDashboard = () => {
                                 <td>{new Date(ride.departureTime).toLocaleTimeString()}</td>
                                 <td>{new Date(ride.arrivalTime).toLocaleTimeString()}</td>
                                 <td>{ride.availableSeats}</td>
+                                <td>{ride.ridePrice || 'N/A'}</td>
                                 <td>
                                     {/* BookOnPay button */}
                                     <button

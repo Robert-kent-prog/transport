@@ -1,29 +1,32 @@
-// src/pages/RealTimeTracking.jsx
-
-import React from 'react';
+import React from "react";
 import GoogleMapReact from 'google-map-react';
 
-const RealTimeTracking = ({ driverLocation }) => {
-    const defaultCenter = { lat: 37.7749, lng: -122.4194 }; // Default San Francisco coordinates
+const AnyReactComponent = ({ text }) => <div>{text}</div>;
+const RealTimeTracking = () => {
+    const defaultProps = {
+        center: {
+            lat: 1.375081,
+            lng: 37.995213
+        },
+        zoom: 11
+    };
 
     return (
-        <div className="container mt-5">
-            <h2>Track Your Driver</h2>
-            <div style={{ height: '400px', width: '100%' }}>
-                <GoogleMapReact
-                    bootstrapURLKeys={{ key: 'YOUR_GOOGLE_MAPS_API_KEY' }}
-                    defaultCenter={defaultCenter}
-                    defaultZoom={11}
-                >
-                    <div
-                        lat={driverLocation.lat}
-                        lng={driverLocation.lng}
-                        text="Driver Location"
-                    />
-                </GoogleMapReact>
-            </div>
+        // Important! Always set the container height explicitly
+        <div style={{ height: '100vh', width: '100%' }}>
+            <GoogleMapReact
+                bootstrapURLKeys={{ key: 'AIzaSyCvYWF05iifWuBkQaVIKMC0C6Q7yWZzCFw' }}
+                defaultCenter={defaultProps.center}
+                defaultZoom={defaultProps.zoom}
+            >
+                <AnyReactComponent
+                    lat={1.375081}
+                    lng={37.995213}
+                    text="My Marker"
+                />
+            </GoogleMapReact>
         </div>
     );
-};
+}
 
 export default RealTimeTracking;

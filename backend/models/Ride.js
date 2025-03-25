@@ -30,12 +30,10 @@ const rideSchema = new mongoose.Schema(
             required: true,
             min: 1,
         },
-        passengers: [
-            {
-                passengerId: mongoose.Schema.Types.ObjectId, // Passenger's ID
-                passengerName: String, // Passenger's name (optional)
-            },
-        ],
+        ridePrice: {
+            type: Number,
+            required: true,
+        },
         status: {
             type: String,
             enum: ['active', 'completed', 'cancelled'], // Status of the ride

@@ -8,7 +8,7 @@ export const createRide = async (req, res) => {
             return res.status(401).json({ error: 'Unauthorized. User not found in request.' });
         }
 
-        const { pickupLocation, dropoffLocation, departureTime, arrivalTime, availableSeats } = req.body;
+        const { pickupLocation, dropoffLocation, departureTime, arrivalTime, availableSeats, ridePrice } = req.body;
         const userId = req.user.userId; // Extract userId from token
 
         if (!userId) {
@@ -27,6 +27,7 @@ export const createRide = async (req, res) => {
             departureTime: new Date(departureTime),
             arrivalTime: new Date(arrivalTime),
             availableSeats: parseInt(availableSeats, 10),
+            ridePrice: parseInt(ridePrice, 10),
         });
 
         await newRide.save();

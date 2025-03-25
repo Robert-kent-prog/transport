@@ -33,13 +33,6 @@ const userSchema = new mongoose.Schema(
                     return this.role === 'driver'; // Required only if role is "driver"
                 },
             },
-            seatingCapacity: {
-                type: Number,
-                required: function () {
-                    return this.role === 'driver'; // Required only if role is "driver"
-                },
-                min: 1, // Minimum value for seating capacity
-            },
         },
         AccessToken: {
             type: String,

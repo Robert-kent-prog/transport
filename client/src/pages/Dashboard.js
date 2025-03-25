@@ -20,7 +20,7 @@ const DriverDashboard = () => {
             }
 
             try {
-                const response = await axios.get('http://20.0.161.221:5000/api/rides/all', {
+                const response = await axios.get('http://20.0.135.221:5000/api/rides/all', {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
 
@@ -65,7 +65,7 @@ const DriverDashboard = () => {
 
         try {
             await axios.put(
-                `http://20.0.161.221:5000/api/rides/update/${selectedRide._id}`,
+                `http://20.0.135.221:5000/api/rides/update/${selectedRide._id}`,
                 { status: updatedStatus, availableSeats: updatedSeats },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             );
@@ -90,7 +90,7 @@ const DriverDashboard = () => {
         }
 
         try {
-            await axios.delete(`http://20.0.161.221:5000/api/rides/delete/${rideId}`, {
+            await axios.delete(`http://20.0.135.221:5000/api/rides/delete/${rideId}`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
@@ -112,9 +112,10 @@ const DriverDashboard = () => {
                         <th>ID</th>
                         <th>Location</th>
                         <th>Destination</th>
-                        <th>Departure Time</th>
+                        <th>Dept. Time</th>
                         <th>Arrival Time</th>
-                        <th>Available Seats</th>
+                        <th>Seats</th>
+                        <th>Amount</th> {/* Added Amount column */}
                         <th>Ride Status</th>
                         <th>Actions</th>
                     </tr>
@@ -128,12 +129,20 @@ const DriverDashboard = () => {
                             <td>{new Date(ride.departureTime).toLocaleTimeString()}</td>
                             <td>{new Date(ride.arrivalTime).toLocaleTimeString()}</td>
                             <td>{ride.availableSeats}</td>
+                            <td>{ride.ridePrice || 'N/A'}</td> {/* Display amount or fallback to 'N/A' */}
                             <td>{rideStatuses[ride._id]}</td>
                             <td>
-                                <button className="btn btn-success me-2" onClick={() => openModal(ride)}>
+                                {/* Buttons in the same line */}
+                                <button
+                                    className="btn btn-success me-2" // Add margin-end for spacing
+                                    onClick={() => openModal(ride)}
+                                >
                                     Update
                                 </button>
-                                <button className="btn btn-danger" onClick={() => handleDeleteRide(ride._id)}>
+                                <button
+                                    className="btn btn-danger"
+                                    onClick={() => handleDeleteRide(ride._id)}
+                                >
                                     Delete
                                 </button>
                             </td>

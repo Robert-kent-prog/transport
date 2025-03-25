@@ -21,12 +21,11 @@ const Register = () => {
             carMake: '',
             carModel: '',
             licensePlate: '',
-            seatingCapacity: '',
         },
         validationSchema: Yup.object({
             name: Yup.string().required('Required'),
             email: Yup.string().email('Invalid email').required('Required'),
-            phone: Yup.string().required('Required'),
+            phone: Yup.string().min(10).max(10).required('Required'),
             password: Yup.string().min(6).required('Required'),
             confirmPassword: Yup.string()
                 .oneOf([Yup.ref('password'), null], 'Passwords must match')
@@ -35,7 +34,6 @@ const Register = () => {
                 carMake: Yup.string().required('Required'),
                 carModel: Yup.string().required('Required'),
                 licensePlate: Yup.string().required('Required'),
-                seatingCapacity: Yup.number().positive().integer().required('Required'),
             }),
         }),
         onSubmit: async (values) => {
@@ -52,13 +50,12 @@ const Register = () => {
                         carDetails: {
                             make: values.carMake,
                             model: values.carModel,
-                            licensePlate: values.licensePlate,
-                            seatingCapacity: parseInt(values.seatingCapacity, 10),
+                            licensePlate: values.licensePlate
                         },
                     }),
                 };
                 // Send the registration request to the backend
-                const response = await axios.post('http://20.0.161.221:5000/api/auth/register', payload);
+                const response = await axios.post('http://20.0.135.221:5000/api/auth/register', payload);
                 // Handle successful registration
                 console.log(response.data);
                 alert('Registration successful!');
@@ -119,6 +116,7 @@ const Register = () => {
                         id="phone"
                         name="phone"
                         value={formik.values.phone}
+                        maxLength={10}
                         onChange={formik.handleChange}
                         className={`form-control ${formik.touched.phone && formik.errors.phone ? 'is-invalid' : ''}`}
                     />
@@ -230,24 +228,6 @@ const Register = () => {
                             />
                             {formik.touched.licensePlate && formik.errors.licensePlate ? (
                                 <div className="invalid-feedback">{formik.errors.licensePlate}</div>
-                            ) : null}
-                        </div>
-                        {/* Seating Capacity */}
-                        <div className="mb-3">
-                            <label htmlFor="seatingCapacity" className="form-label">
-                                Seating Capacity
-                            </label>
-                            <input
-                                type="number"
-                                id="seatingCapacity"
-                                name="seatingCapacity"
-                                value={formik.values.seatingCapacity}
-                                onChange={formik.handleChange}
-                                min="1"
-                                className={`form-control ${formik.touched.seatingCapacity && formik.errors.seatingCapacity ? 'is-invalid' : ''}`}
-                            />
-                            {formik.touched.seatingCapacity && formik.errors.seatingCapacity ? (
-                                <div className="invalid-feedback">{formik.errors.seatingCapacity}</div>
                             ) : null}
                         </div>
                     </>

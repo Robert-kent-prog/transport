@@ -15,6 +15,7 @@ const RideCreation = () => {
     const [currentLocation, setCurrentLocation] = useState('');
     const [destination, setDestination] = useState('');
     const [availableSeats, setAvailableSeats] = useState('');
+    const [ridePrice, setRidePrice] = useState('');
     const [driverDetails, setDriverDetails] = useState(null); // To store fetched driver details
 
     useEffect(() => {
@@ -40,7 +41,7 @@ const RideCreation = () => {
                 }
 
                 // Fetch driver details using the user ID
-                const response = await axios.get(`http://20.0.161.221:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
+                const response = await axios.get(`http://20.0.135.221:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
                 setDriverDetails(response.data); // Set the fetched driver details in state
             } catch (error) {
                 console.error('Error fetching driver details:', error);
@@ -54,7 +55,7 @@ const RideCreation = () => {
         e.preventDefault();
 
         // Validate inputs
-        if (!currentLocation || !destination || !departureTime || !arrivalTime || !availableSeats) {
+        if (!currentLocation || !destination || !departureTime || !arrivalTime || !availableSeats || !ridePrice) {
             alert('Please fill in all required fields.');
             return;
         }
@@ -66,6 +67,7 @@ const RideCreation = () => {
             departureTime: `${new Date().toISOString().split('T')[0]}T${departureTime}:00`, // Format departure time
             arrivalTime: `${new Date().toISOString().split('T')[0]}T${arrivalTime}:00`, // Format arrival time
             availableSeats: parseInt(availableSeats, 10), // Convert to number
+            ridePrice: parseInt(ridePrice),
         };
 
         try {
@@ -79,7 +81,7 @@ const RideCreation = () => {
 
             // Send the ride creation request to the backend with the Authorization header
             await axios.post(
-                'http://20.0.161.221:5000/api/rides/create',
+                'http://20.0.135.221:5000/api/rides/create',
                 ridePayload,
                 {
                     headers: {
@@ -95,6 +97,7 @@ const RideCreation = () => {
             setDepartureTime('');
             setArrivalTime('');
             setAvailableSeats('');
+            setRidePrice('');
         } catch (error) {
             alert('Failed to create ride. Please try again.');
             console.error('Error creating ride:', error.response?.data || error.message);
@@ -187,6 +190,22 @@ const RideCreation = () => {
                         required
                     />
                 </div>
+                {/* Available Seats Field */}
+                <div className="mb-3">
+                    <label htmlFor="rideprice" className="form-label">
+                        Amount
+                    </label>
+                    <input
+                        type="number"
+                        id="availableSeats"
+                        className="form-control"
+                        value={ridePrice}
+                        onChange={(e) => setRidePrice(e.target.value)}
+                        min="1"
+                        required
+                        placeholder="Enter the Amount"
+                    />
+                </div>
 
                 {/* Display Car Details (Read-Only) */}
                 <div className="mb-3">
@@ -201,10 +220,6 @@ const RideCreation = () => {
                     <p>
                         <strong>License Plate:</strong>{' '}
                         {driverDetails.carDetails?.licensePlate || 'Not available'}
-                    </p>
-                    <p>
-                        <strong>Seating Capacity:</strong>{' '}
-                        {driverDetails.carDetails?.seatingCapacity || 'Not available'}
                     </p>
                 </div>
 

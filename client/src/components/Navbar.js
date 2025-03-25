@@ -62,11 +62,22 @@ const NavbarComponent = () => {
                                 <NavLink
                                     activeClassName="active"
                                     className="nav-link"
+                                    to="/real-time-tracking/:rideId"
+                                >
+                                    RealTimeTracking
+                                </NavLink>
+                            </li>
+                            {/* Ride Creation (Driver) */}
+                            <li className="nav-item">
+                                <NavLink
+                                    activeClassName="active"
+                                    className="nav-link"
                                     to="/create-ride"
                                 >
                                     Create Ride
                                 </NavLink>
                             </li>
+
 
                             {/* Passenger Dashboard (Passenger) */}
                             <li className="nav-item">
