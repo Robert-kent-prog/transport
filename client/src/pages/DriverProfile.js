@@ -63,8 +63,8 @@ const DriverProfile = () => {
     };
 
     return (
-        <div className="container mt-5">
-            <h2 className="text-center mb-4">Driver Profile</h2>
+        <div className="container mt-5" style={{ maxWidth: '1100px', margin: '0 auto' }}>
+            <h2 className="text-center mb-4" style={{ fontSize: '39px', fontWeight: "700" }}>Driver Profile</h2>
             <div className="card shadow-lg">
                 <div className="row g-0">
                     {/* Profile Image Section */}
