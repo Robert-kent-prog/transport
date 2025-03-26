@@ -20,8 +20,8 @@ const DriverProfile = () => {
 
                 // Decode the access token to get user ID and role
                 const decodedToken = jwtDecode(accessToken);
-                const userId = decodedToken.userId; // Assuming the token contains a `userId` field
-                const role = decodedToken.role; // Assuming the token contains a `role` field
+                const userId = decodedToken.userId;
+                const role = decodedToken.role;
 
                 // Check if the user is a driver
                 if (role !== 'driver') {
@@ -31,7 +31,7 @@ const DriverProfile = () => {
 
                 // Fetch driver details using the user ID
                 const response = await axios.get(`http://20.0.135.221:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
-                setDriverDetails(response.data); // Set the fetched driver details in state
+                setDriverDetails(response.data);
             } catch (error) {
                 console.error('Error fetching driver details:', error);
             }
