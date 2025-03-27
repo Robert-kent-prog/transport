@@ -55,7 +55,7 @@ const Register = () => {
                     }),
                 };
                 // Send the registration request to the backend
-                const response = await axios.post('http://20.0.135.221:5000/api/auth/register', payload);
+                const response = await axios.post('http://192.168.137.198:5000/api/auth/register', payload);
                 // Handle successful registration
                 console.log(response.data);
                 alert('Registration successful!');

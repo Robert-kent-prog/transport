@@ -20,7 +20,7 @@ const DriverDashboard = () => {
             }
 
             try {
-                const response = await axios.get('http://20.0.135.221:5000/api/rides/all', {
+                const response = await axios.get('http://192.168.137.198:5000/api/rides/all', {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
 
@@ -65,7 +65,7 @@ const DriverDashboard = () => {
 
         try {
             await axios.put(
-                `http://20.0.135.221:5000/api/rides/update/${selectedRide._id}`,
+                `http://192.168.137.198:5000/api/rides/update/${selectedRide._id}`,
                 { status: updatedStatus, availableSeats: updatedSeats },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             );
@@ -90,7 +90,7 @@ const DriverDashboard = () => {
         }
 
         try {
-            await axios.delete(`http://20.0.135.221:5000/api/rides/delete/${rideId}`, {
+            await axios.delete(`http://192.168.137.198:5000/api/rides/delete/${rideId}`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 

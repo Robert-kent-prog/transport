@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 // import { useParams } from 'react-router-dom';
 import { jwtDecode } from "jwt-decode";
+import driverFallbackImage from '../images/driver.png'; // Adjust the path as needed
 
 const DriverProfile = () => {
     // const { rideId } = useParams(); // Extract ride ID from URL
@@ -30,7 +31,7 @@ const DriverProfile = () => {
                 }
 
                 // Fetch driver details using the user ID
-                const response = await axios.get(`http://20.0.135.221:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
+                const response = await axios.get(`http://192.168.137.198:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
                 setDriverDetails(response.data);
             } catch (error) {
                 console.error('Error fetching driver details:', error);
@@ -70,7 +71,7 @@ const DriverProfile = () => {
                     {/* Profile Image Section */}
                     <div className="col-md-4 d-flex align-items-center justify-content-center bg-light">
                         <img
-                            src={driverDetails.profileImage || 'https://via.placeholder.com/150'}
+                            src={driverDetails.profileImage || driverFallbackImage} // Fixed file path
                             alt="Driver Profile"
                             className="img-fluid rounded-circle border border-3 border-primary p-2"
                             style={{ width: '150px', height: '150px', objectFit: 'cover' }}
