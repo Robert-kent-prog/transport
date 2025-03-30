@@ -57,7 +57,7 @@ const PaymentOptions = () => {
             </div>
 
             {/* Payment Card */}
-            <div className="row justify-content-center">
+            <div className="row justify-content-flexstart">
                 <div className="col-md-6">
                     <div className="card payment-card text-white rounded">
                         <div className="card-body">
