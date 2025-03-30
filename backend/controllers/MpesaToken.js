@@ -21,7 +21,7 @@ export const createToken = async (req, res, next) => {
         );
 
         req.token = response.data.access_token;
-        console.log('Token generated successfully:', req.token);
+        // console.log('Token generated successfully:', req.token);
         next();
     } catch (err) {
         console.error('Error generating token:', err.message);
@@ -36,7 +36,7 @@ export const createToken = async (req, res, next) => {
  * Initiate STK Push for C2B payments
  */
 export const stkPush = async (req, res) => {
-    console.log('Request Body:', req.body); // Debugging line
+    // console.log('Request Body:', req.body); // Debugging line
 
     const shortCode = process.env.STK_SHORTCODE;
     const phoneNumber = req.body.phone?.substring(1); // Use 'phone' instead of 'phoneNumber'
@@ -85,7 +85,7 @@ export const stkPush = async (req, res) => {
             remarks: 'Initiated C2B Payment',
         });
 
-        // await transaction.save(); // Uncomment if saving to DB
+        await transaction.save(); // Uncomment if saving to DB
         return res.status(200).json(response.data);
     } catch (err) {
         console.error('STK Push Error:', err.message);
@@ -105,7 +105,7 @@ export const simulator = async (req, res) => {
     const data = {
         ShortCode: process.env.STK_SHORTCODE,
         CommandID: 'CustomerPayBillOnline',
-        Amount: '100',
+        Amount: '10',
         Msisdn: '254708374149', // Test phone number
         BillRefNumber: 'TestAPI',
     };
@@ -129,11 +129,14 @@ export const simulator = async (req, res) => {
 export const b2cPayment = async (req, res) => {
     const url = 'https://sandbox.safaricom.co.ke/mpesa/b2c/v3/paymentrequest';
 
-    const phoneNumber = req.body.phoneNumber?.substring(1); // Remove leading '0'
+    const phoneNumber = req.body.phone?.substring(1); // Use 'phone' instead of 'phoneNumber'
     const amount = req.body.amount;
 
     if (!phoneNumber || !amount) {
-        return res.status(400).json({ error: 'Phone number and amount are required' });
+        return res.status(400).json({
+            error: 'Invalid request body',
+            details: 'Please provide both phone and amount in the request body.',
+        });
     }
 
     const data = {
@@ -159,7 +162,7 @@ export const b2cPayment = async (req, res) => {
         });
 
         const transaction = new Transaction({
-            userId: req.user?._id, // Assuming user is authenticated and attached to req
+            userId: req.user?._id || null, // Use null if req.user is undefined
             transactionId: response.data.OriginatorConversationID,
             transactionType: 'B2C',
             amount,
