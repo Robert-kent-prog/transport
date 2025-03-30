@@ -54,7 +54,7 @@ const DriverDashboard = () => {
         setFilteredRides(filtered); // Update filtered rides state
     };
 
-    // Handle "BookOnPay" button click
+    // Handle "BookOnPay" button
     const handleBookOnPay = (rideId) => {
         navigate(`/payment-options/${rideId}`);
     };
@@ -90,7 +90,6 @@ const DriverDashboard = () => {
                 </div>
             </div>
 
-            {/* Display Filtered Rides */}
             <table className="table table-striped">
                 <thead>
                     <tr>
