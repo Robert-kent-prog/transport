@@ -9,6 +9,9 @@ const Register = () => {
     const navigate = useNavigate();
     // State to track the selected role
     const [role, setRole] = useState('passenger'); // Default role is "passenger"
+    // Separate states for password visibility
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     // Formik configuration
     const formik = useFormik({
@@ -50,12 +53,12 @@ const Register = () => {
                         carDetails: {
                             make: values.carMake,
                             model: values.carModel,
-                            licensePlate: values.licensePlate
+                            licensePlate: values.licensePlate,
                         },
                     }),
                 };
                 // Send the registration request to the backend
-                const response = await axios.post('http://192.168.137.198:5000/api/auth/register', payload);
+                const response = await axios.post('http://20.0.113.122:5000/api/auth/register', payload);
                 // Handle successful registration
                 console.log(response.data);
                 alert('Registration successful!');
@@ -83,12 +86,14 @@ const Register = () => {
                         name="name"
                         value={formik.values.name}
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         className={`form-control ${formik.touched.name && formik.errors.name ? 'is-invalid' : ''}`}
                     />
-                    {formik.touched.name && formik.errors.name ? (
+                    {formik.touched.name && formik.errors.name && (
                         <div className="invalid-feedback">{formik.errors.name}</div>
-                    ) : null}
+                    )}
                 </div>
+
                 {/* Email Field */}
                 <div className="mb-3">
                     <label htmlFor="email" className="form-label">
@@ -100,12 +105,14 @@ const Register = () => {
                         name="email"
                         value={formik.values.email}
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         className={`form-control ${formik.touched.email && formik.errors.email ? 'is-invalid' : ''}`}
                     />
-                    {formik.touched.email && formik.errors.email ? (
+                    {formik.touched.email && formik.errors.email && (
                         <div className="invalid-feedback">{formik.errors.email}</div>
-                    ) : null}
+                    )}
                 </div>
+
                 {/* Phone Field */}
                 <div className="mb-3">
                     <label htmlFor="phone" className="form-label">
@@ -118,46 +125,78 @@ const Register = () => {
                         value={formik.values.phone}
                         maxLength={10}
                         onChange={formik.handleChange}
+                        onBlur={formik.handleBlur}
                         className={`form-control ${formik.touched.phone && formik.errors.phone ? 'is-invalid' : ''}`}
                     />
-                    {formik.touched.phone && formik.errors.phone ? (
+                    {formik.touched.phone && formik.errors.phone && (
                         <div className="invalid-feedback">{formik.errors.phone}</div>
-                    ) : null}
+                    )}
                 </div>
+
                 {/* Password Field */}
                 <div className="mb-3">
                     <label htmlFor="password" className="form-label">
                         Password
                     </label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        value={formik.values.password}
-                        onChange={formik.handleChange}
-                        className={`form-control ${formik.touched.password && formik.errors.password ? 'is-invalid' : ''}`}
-                    />
-                    {formik.touched.password && formik.errors.password ? (
+                    <div className="input-group">
+                        <input
+                            type={showPassword ? 'text' : 'password'} // Toggle password visibility
+                            id="password"
+                            name="password"
+                            value={formik.values.password}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${formik.touched.password && formik.errors.password ? 'is-invalid' : ''}`}
+                        />
+                        <span
+                            className="input-group-text"
+                            onClick={() => setShowPassword(!showPassword)} // Toggle password visibility
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {showPassword ? (
+                                <i className="bi bi-eye-slash"></i> //{/* Eye-slash icon for hiding */}
+                            ) : (
+                                <i className="bi bi-eye"></i>// {/* Eye icon for showing */}
+                            )}
+                        </span>
+                    </div>
+                    {formik.touched.password && formik.errors.password && (
                         <div className="invalid-feedback">{formik.errors.password}</div>
-                    ) : null}
+                    )}
                 </div>
+
                 {/* Confirm Password Field */}
                 <div className="mb-3">
                     <label htmlFor="confirmPassword" className="form-label">
                         Confirm Password
                     </label>
-                    <input
-                        type="password"
-                        id="confirmPassword"
-                        name="confirmPassword"
-                        value={formik.values.confirmPassword}
-                        onChange={formik.handleChange}
-                        className={`form-control ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'is-invalid' : ''}`}
-                    />
-                    {formik.touched.confirmPassword && formik.errors.confirmPassword ? (
+                    <div className="input-group">
+                        <input
+                            type={showConfirmPassword ? 'text' : 'password'} // Toggle confirm password visibility
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            value={formik.values.confirmPassword}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            className={`form-control ${formik.touched.confirmPassword && formik.errors.confirmPassword ? 'is-invalid' : ''}`}
+                        />
+                        <span
+                            className="input-group-text"
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)} // Toggle confirm password visibility
+                            style={{ cursor: 'pointer' }}
+                        >
+                            {showConfirmPassword ? (
+                                <i className="bi bi-eye-slash"></i>
+                            ) : (
+                                <i className="bi bi-eye"></i>
+                            )}
+                        </span>
+                    </div>
+                    {formik.touched.confirmPassword && formik.errors.confirmPassword && (
                         <div className="invalid-feedback">{formik.errors.confirmPassword}</div>
-                    ) : null}
+                    )}
                 </div>
+
                 {/* Role Selection Dropdown */}
                 <div className="mb-3">
                     <label htmlFor="role" className="form-label">
@@ -176,6 +215,7 @@ const Register = () => {
                         <option value="driver">Driver</option>
                     </select>
                 </div>
+
                 {/* Car Details Fields (for drivers only) */}
                 {role === 'driver' && (
                     <>
@@ -190,12 +230,14 @@ const Register = () => {
                                 name="carMake"
                                 value={formik.values.carMake}
                                 onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 className={`form-control ${formik.touched.carMake && formik.errors.carMake ? 'is-invalid' : ''}`}
                             />
-                            {formik.touched.carMake && formik.errors.carMake ? (
+                            {formik.touched.carMake && formik.errors.carMake && (
                                 <div className="invalid-feedback">{formik.errors.carMake}</div>
-                            ) : null}
+                            )}
                         </div>
+
                         {/* Car Model */}
                         <div className="mb-3">
                             <label htmlFor="carModel" className="form-label">
@@ -207,12 +249,14 @@ const Register = () => {
                                 name="carModel"
                                 value={formik.values.carModel}
                                 onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 className={`form-control ${formik.touched.carModel && formik.errors.carModel ? 'is-invalid' : ''}`}
                             />
-                            {formik.touched.carModel && formik.errors.carModel ? (
+                            {formik.touched.carModel && formik.errors.carModel && (
                                 <div className="invalid-feedback">{formik.errors.carModel}</div>
-                            ) : null}
+                            )}
                         </div>
+
                         {/* License Plate */}
                         <div className="mb-3">
                             <label htmlFor="licensePlate" className="form-label">
@@ -224,19 +268,22 @@ const Register = () => {
                                 name="licensePlate"
                                 value={formik.values.licensePlate}
                                 onChange={formik.handleChange}
+                                onBlur={formik.handleBlur}
                                 className={`form-control ${formik.touched.licensePlate && formik.errors.licensePlate ? 'is-invalid' : ''}`}
                             />
-                            {formik.touched.licensePlate && formik.errors.licensePlate ? (
+                            {formik.touched.licensePlate && formik.errors.licensePlate && (
                                 <div className="invalid-feedback">{formik.errors.licensePlate}</div>
-                            ) : null}
+                            )}
                         </div>
                     </>
                 )}
+
                 {/* Submit Button */}
                 <button type="submit" className="btn btn-primary w-100">
                     Register
                 </button>
             </form>
+
             {/* Already have an account? Login */}
             <p className="mt-3 text-center">
                 Already have an account?{' '}

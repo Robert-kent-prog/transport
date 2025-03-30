@@ -41,7 +41,7 @@ const RideCreation = () => {
                 }
 
                 // Fetch driver details using the user ID
-                const response = await axios.get(`http://192.168.137.198:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
+                const response = await axios.get(`http://20.0.113.122:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
                 setDriverDetails(response.data); // Set the fetched driver details in state
             } catch (error) {
                 console.error('Error fetching driver details:', error);
@@ -81,7 +81,7 @@ const RideCreation = () => {
 
             // Send the ride creation request to the backend with the Authorization header
             await axios.post(
-                'http://192.168.137.198:5000/api/rides/create',
+                'http://20.0.113.122:5000/api/rides/create',
                 ridePayload,
                 {
                     headers: {
