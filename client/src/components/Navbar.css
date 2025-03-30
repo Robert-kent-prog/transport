@@ -1,4 +1,4 @@
-/* General Navbar Styles */
+/* General Navbar Styling */
 .navbar {
   position: fixed; /* Fix the navbar to the top of the viewport */
   top: 0; /* Align it to the top */
@@ -7,30 +7,22 @@
   background-color: #007bff !important; /* Blue background */
   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
   padding: 0.5rem 1rem; /* Add padding for spacing */
+  height: 60px; /* Fixed height for the navbar */
+  margin-bottom: 20px; /* Add spacing below the navbar */
 }
 
-/* Center the Nav Items */
-.navbar .container-fluid {
-  display: flex;
-  justify-content: space-between; /* Space between brand and links */
-  align-items: center; /* Align vertically */
-}
-
+/* Navbar Brand/Logo Styling */
 .navbar-brand {
-  color: white !important; /* Brand text color */
+  color: white !important; /* White text for the brand/logo */
   font-weight: bold;
   font-size: 1.2rem;
   text-transform: uppercase; /* Uppercase branding */
   letter-spacing: 1px; /* Add spacing between letters for a polished look */
 }
 
-.navbar-nav {
-  display: flex;
-  gap: 1rem; /* Add spacing between nav items */
-}
-
+/* Navbar Links Styling */
 .navbar-nav .nav-item .nav-link {
-  color: white !important; /* Text color */
+  color: white !important; /* White text for links */
   font-size: 0.9rem;
   padding: 0.5rem 1rem;
   transition: color 0.3s ease, background-color 0.3s ease;
@@ -68,53 +60,11 @@
   transform: scale(1.05); /* Slight zoom effect */
 }
 
-/* Hamburger Menu Styling */
-.navbar-toggler {
-  border: none !important; /* Remove default border */
-}
-
-.navbar-toggler-icon {
-  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='white' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E") !important;
-}
-
-/* Responsive Design */
-@media (max-width: 768px) {
-  .navbar-collapse {
-    position: absolute; /* Position the collapsed menu absolutely */
-    top: 56px; /* Position below the fixed navbar */
-    left: 50%; /* Center horizontally */
-    transform: translateX(-50%); /* Adjust for centering */
-    width: 90%; /* Limit width to 90% of the screen */
-    max-width: 400px; /* Set a maximum width */
-    background-color: #007bff !important; /* Match navbar background */
-    padding: 1rem; /* Add padding for collapsed menu */
-    border-radius: 0.5rem; /* Rounded corners for better aesthetics */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Add shadow for depth */
-  }
-
-  .navbar-nav {
-    flex-direction: column; /* Stack items vertically on small screens */
-    align-items: center; /* Center items */
-    gap: 0.5rem; /* Reduce spacing between items */
-  }
-
-  .navbar-nav .nav-item {
-    width: 100%; /* Full-width items for better alignment */
-    text-align: center; /* Center text */
-  }
-
-  .navbar-nav .nav-link {
-    padding: 0.5rem 0; /* Adjust padding for smaller screens */
-    font-size: 0.85rem; /* Smaller font size for compactness */
-  }
-
-  .navbar-brand {
-    font-size: 1rem; /* Slightly reduce logo size on small screens */
-  }
-
-  .navbar-toggler {
-    margin-right: 0.5rem; /* Add spacing for the hamburger icon */
-  }
+/* Center the Nav Items */
+.navbar .container-fluid {
+  display: flex;
+  justify-content: space-between; /* Space between brand and links */
+  align-items: center; /* Align vertically */
 }
 
 /* Padding for the main content to prevent overlap with the navbar */

@@ -6,7 +6,7 @@ const AboutUs = () => {
             <div className="row justify-content-center">
                 <div className="col-md-8 text-center">
                     {/* Title */}
-                    <h1 className="mb-4">About Us</h1>
+                    <h1 className="mb-4" style={{ fontSize: '39px', fontWeight: "700", color: " #007bff" }}>About Us</h1>
                     <p className="lead fs-5 mb-5">
                         Welcome to <strong>RideShare</strong>, a revolutionary ride-sharing platform designed to make commuting easier, greener, and more affordable!
                     </p>

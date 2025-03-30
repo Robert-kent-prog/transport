@@ -31,7 +31,7 @@ const ContactUs = () => {
             <div className="row justify-content-center">
                 <div className="col-md-8">
                     {/* Title */}
-                    <h1 className="text-center mb-4">Contact Us</h1>
+                    <h1 className="text-center mb-4" style={{ fontSize: '39px', fontWeight: "700", color: " #007bff" }}>Contact Us</h1>
                     <p className="lead text-center mb-5">
                         We’d love to hear from you! Whether you have questions, feedback, or suggestions, our team is here to assist you.
                     </p>
