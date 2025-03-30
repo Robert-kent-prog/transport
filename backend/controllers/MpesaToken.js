@@ -76,7 +76,7 @@ export const stkPush = async (req, res) => {
         });
 
         const transaction = new Transaction({
-            userId: req.user?._id, // Assuming user is authenticated and attached to req
+            userId: req.user._id, // Use the userId from the decoded JWT token
             transactionId: response.data.CheckoutRequestID,
             transactionType: 'C2B',
             amount,
@@ -162,7 +162,7 @@ export const b2cPayment = async (req, res) => {
         });
 
         const transaction = new Transaction({
-            userId: req.user?._id || null, // Use null if req.user is undefined
+            userId: req.user._id, // Use the userId from the decoded JWT token
             transactionId: response.data.OriginatorConversationID,
             transactionType: 'B2C',
             amount,
