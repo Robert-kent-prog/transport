@@ -36,12 +36,17 @@ export const createToken = async (req, res, next) => {
  * Initiate STK Push for C2B payments
  */
 export const stkPush = async (req, res) => {
+    console.log('Request Body:', req.body); // Debugging line
+
     const shortCode = process.env.STK_SHORTCODE;
-    const phoneNumber = req.body.phoneNumber?.substring(1); // Remove leading '0'
+    const phoneNumber = req.body.phone?.substring(1); // Use 'phone' instead of 'phoneNumber'
     const amount = req.body.amount;
 
     if (!phoneNumber || !amount) {
-        return res.status(400).json({ error: 'Phone number and amount are required' });
+        return res.status(400).json({
+            error: 'Invalid request body',
+            details: 'Please provide both phone and amount in the request body.',
+        });
     }
 
     const passkey = process.env.PASSKEY;
@@ -80,7 +85,7 @@ export const stkPush = async (req, res) => {
             remarks: 'Initiated C2B Payment',
         });
 
-        await transaction.save();
+        // await transaction.save(); // Uncomment if saving to DB
         return res.status(200).json(response.data);
     } catch (err) {
         console.error('STK Push Error:', err.message);
