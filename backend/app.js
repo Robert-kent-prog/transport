@@ -9,7 +9,6 @@ import authRoutes from './routes/authRoutes.js';
 import rideRoutes from './routes/rideRoutes.js';
 import loginRoute from './routes/loginRoute.js';
 import verifyJwtRoute from './routes/verifyJwtRoute.js';
-import RegisterUrlsRoute from './routes/RegisterUrlsRoute.js';
 import MpesaTokenRoute from './routes/MpesaTokenRoute.js';
 
 dotenv.config();
@@ -32,8 +31,6 @@ app.use('/api/authenticate', loginRoute);
 //mpesa token routes
 app.use("/api", MpesaTokenRoute);
 //use review routes
-
-app.use("/api/urls", RegisterUrlsRoute);
 
 app.use('/api/token', verifyJwtRoute);
 // Connect to MongoDB using async/await and without deprecated options

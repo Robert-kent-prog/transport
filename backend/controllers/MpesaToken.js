@@ -33,49 +33,6 @@ export const createToken = async (req, res, next) => {
 };
 
 /**
- * Register C2B URLs with Safaricom API
- */
-export const registerURLs = async (req, res, next) => {
-    const token = req.token;
-    const url = 'https://sandbox.safaricom.co.ke/mpesa/c2b/v1/registerurl';
-
-    const data = {
-        ShortCode: '601426',
-        ResponseType: 'Completed',
-        ConfirmationURL: 'https://65a0-102-212-11-46.ngrok-free.app/api/confirmation',
-        ValidationURL: 'https://65a0-102-212-11-46.ngrok-free.app/api/validation',
-        Correlator: `${Date.now()}`, // Add a unique correlator to prevent duplicates
-    };
-
-    try {
-        console.log('Registering URLs with token:', token);
-
-        const response = await axios.post(url, data, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json',
-            },
-        });
-
-        console.log('URLs registered successfully:', response.data);
-        next();
-    } catch (error) {
-        console.error('Error registering URLs:', error.message);
-        console.error('Error details:', error.response ? error.response.data : error);
-
-        // Log full error details for debugging with Safaricom web tool
-        if (error.response) {
-            console.error('Safaricom API Error Response:', JSON.stringify(error.response.data, null, 2));
-        }
-
-        return res.status(400).json({
-            error: 'Failed to register URLs',
-            details: error.response ? error.response.data : error.message,
-        });
-    }
-};
-
-/**
  * Initiate STK Push for C2B payments
  */
 export const stkPush = async (req, res) => {
@@ -130,63 +87,6 @@ export const stkPush = async (req, res) => {
         console.error('Error details:', err.response ? JSON.stringify(err.response.data, null, 2) : err.message);
 
         return res.status(400).json({ error: err.message });
-    }
-};
-
-/**
- * Handle validation callback from Safaricom
- */
-export const validationCallback = (req, res) => {
-    console.log('Validation Request Received:', req.body);
-
-    const { TransAmount, BusinessShortCode } = req.body;
-
-    if (TransAmount > 0 && BusinessShortCode === process.env.STK_SHORTCODE) {
-        return res.status(200).json({
-            ResponseCode: '0',
-            ResponseDescription: 'Success',
-        });
-    }
-
-    return res.status(400).json({
-        ResponseCode: '1',
-        ResponseDescription: 'Invalid Transaction',
-    });
-};
-
-/**
- * Handle confirmation callback from Safaricom
- */
-export const confirmationCallback = async (req, res) => {
-    console.log('Confirmation Request Received:', req.body);
-
-    const { CheckoutRequestID, ResultCode, ResultDesc, TransAmount, PhoneNumber } = req.body;
-
-    try {
-        const transaction = await Transaction.findOneAndUpdate(
-            { transactionId: CheckoutRequestID },
-            {
-                status: ResultCode === 0 ? 'Completed' : 'Failed',
-                amount: TransAmount,
-                account: PhoneNumber,
-                remarks: ResultDesc || 'No remarks provided',
-            },
-            { new: true }
-        );
-
-        if (!transaction) {
-            return res.status(404).json({ message: 'Transaction not found' });
-        }
-
-        console.log('Transaction confirmed:', transaction);
-
-        return res.status(200).json({
-            ResponseCode: '0',
-            ResponseDescription: 'Success',
-        });
-    } catch (error) {
-        console.error('Error updating transaction:', error);
-        return res.status(500).json({ message: 'Error updating transaction', error });
     }
 };
 
