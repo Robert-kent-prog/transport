@@ -119,7 +119,7 @@ const DriverDashboard = () => {
                                     {/* BookOnPay button */}
                                     <button
                                         className="btn btn-success me-2"
-                                        onClick={() => handleBookOnPay(ride._id)}
+                                        onClick={() => handleBookOnPay(ride._id, ride.ridePrice)}
                                     >
                                         BookOnPay
                                     </button>
