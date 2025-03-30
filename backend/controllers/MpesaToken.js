@@ -36,10 +36,9 @@ export const createToken = async (req, res, next) => {
  * Initiate STK Push for C2B payments
  */
 export const stkPush = async (req, res) => {
-    // console.log('Request Body:', req.body); // Debugging line
 
     const shortCode = process.env.STK_SHORTCODE;
-    const phoneNumber = req.body.phone?.substring(1); // Use 'phone' instead of 'phoneNumber'
+    const phoneNumber = req.body.phone?.substring(1); // Remove leading '0'
     const amount = req.body.amount;
 
     if (!phoneNumber || !amount) {
@@ -75,8 +74,11 @@ export const stkPush = async (req, res) => {
             headers: { Authorization: `Bearer ${req.token}` },
         });
 
+        // Ensure the userId is correctly extracted from req.user
+        const userId = req.user.userId; // Extract userId explicitly
+
         const transaction = new Transaction({
-            userId: req.user._id, // Use the userId from the decoded JWT token
+            userId: userId, // Use the extracted userId
             transactionId: response.data.CheckoutRequestID,
             transactionType: 'C2B',
             amount,
@@ -85,7 +87,10 @@ export const stkPush = async (req, res) => {
             remarks: 'Initiated C2B Payment',
         });
 
-        await transaction.save(); // Uncomment if saving to DB
+        // console.log('Transaction Object Before Save:', transaction); // Debugging statement
+
+        await transaction.save();
+
         return res.status(200).json(response.data);
     } catch (err) {
         console.error('STK Push Error:', err.message);
@@ -94,7 +99,6 @@ export const stkPush = async (req, res) => {
         return res.status(400).json({ error: err.message });
     }
 };
-
 /**
  * Simulate a C2B transaction
  */
@@ -161,8 +165,11 @@ export const b2cPayment = async (req, res) => {
             },
         });
 
+        // Ensure the userId is correctly extracted from req.user
+        const userId = req.user.userId; // Extract userId explicitly
+
         const transaction = new Transaction({
-            userId: req.user._id, // Use the userId from the decoded JWT token
+            userId: userId, // Use the userId from the decoded JWT token
             transactionId: response.data.OriginatorConversationID,
             transactionType: 'B2C',
             amount,

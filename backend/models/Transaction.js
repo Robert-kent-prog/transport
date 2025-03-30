@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 const transactionSchema = new mongoose.Schema({
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: false }, // Reference to User
+    userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Reference to User
     transactionId: { type: String, required: true, unique: true }, // Safaricom transaction ID or unique ID
     transactionType: { type: String, required: true, enum: ["B2C", "C2B"] }, // Transaction type
     amount: { type: Number, required: true }, // Amount involved in the transaction
