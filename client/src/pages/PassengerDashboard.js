@@ -21,7 +21,7 @@ const DriverDashboard = () => {
             }
 
             try {
-                const response = await axios.get('http://20.0.113.122:5000/api/rides/all', {
+                const response = await axios.get('http://20.0.235.239:5000/api/rides/all', {
                     headers: {
                         Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
                     },
@@ -55,8 +55,8 @@ const DriverDashboard = () => {
     };
 
     // Handle "BookOnPay" button
-    const handleBookOnPay = (rideId) => {
-        navigate(`/payment-options/${rideId}`);
+    const handleBookOnPay = (rideId, ridePrice) => {
+        navigate(`/payment-options/${rideId}/${ridePrice}`);
     };
 
     return (

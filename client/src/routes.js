@@ -24,9 +24,8 @@ const Router = () => {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create-ride" element={<RideCreation />} />
             <Route path="/passenger-dashboard" element={<PassengerDashboard />} />
-            <Route path="/payment-options/:rideId" element={<PaymentOptions />} />
+            <Route path="/payment-options/:rideId/:ridePrice" element={<PaymentOptions />} />
             <Route path="/driver-profile/:rideId" element={<DriverProfile />} />
-
             <Route path="/booking/:rideId" element={<BookingConfirmation />} />
             <Route path="/real-time-tracking/:rideId" element={<RealTimeTracking />} />
             <Route path="/chat/:driverId" element={<Chat />} />

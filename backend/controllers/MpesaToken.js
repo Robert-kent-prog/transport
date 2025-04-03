@@ -83,7 +83,7 @@ export const stkPush = async (req, res) => {
             transactionType: 'C2B',
             amount,
             account: `254${phoneNumber}`,
-            status: 'Pending',
+            status: 'Completed',
             remarks: 'Initiated C2B Payment',
         });
 
@@ -174,7 +174,7 @@ export const b2cPayment = async (req, res) => {
             transactionType: 'B2C',
             amount,
             account: `254${phoneNumber}`,
-            status: 'Pending',
+            status: 'Completed',
             remarks: 'Initiated B2C Payment',
         });
 
