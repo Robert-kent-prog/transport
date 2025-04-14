@@ -14,7 +14,7 @@ const router = express.Router();
 router.post('/create', verifyDriver, verifyJWT, createRide);
 
 // Get all rides
-router.get('/all', verifyJWT, getAllRides);
+router.get('/all', getAllRides);
 
 // Create a ride
 router.put('/update/:rideId', verifyDriver, verifyJWT, updateRideDetails);

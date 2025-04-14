@@ -4,6 +4,8 @@ import React, { useContext, useState, useEffect } from 'react';
 import axios from 'axios'; // For API calls
 import { MapContext } from '../contexts/MapContext';
 import { jwtDecode } from "jwt-decode";
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 const RideCreation = () => {
     const { routeDetails } =
@@ -11,7 +13,7 @@ const RideCreation = () => {
 
     // State for new fields: Departure Time, Arrival Time, Available Seats, and fetched car details
     const [departureTime, setDepartureTime] = useState('');
-    const [arrivalTime, setArrivalTime] = useState('');
+    const [departureDate, setDepartureDate] = useState(new Date());
     const [currentLocation, setCurrentLocation] = useState('');
     const [destination, setDestination] = useState('');
     const [availableSeats, setAvailableSeats] = useState('');
@@ -41,7 +43,7 @@ const RideCreation = () => {
                 }
 
                 // Fetch driver details using the user ID
-                const response = await axios.get(`http://20.0.235.239:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
+                const response = await axios.get(`http://20.0.183.85:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
                 setDriverDetails(response.data); // Set the fetched driver details in state
             } catch (error) {
                 console.error('Error fetching driver details:', error);
@@ -55,7 +57,7 @@ const RideCreation = () => {
         e.preventDefault();
 
         // Validate inputs
-        if (!currentLocation || !destination || !departureTime || !arrivalTime || !availableSeats || !ridePrice) {
+        if (!currentLocation || !destination || !departureTime || !departureDate || !availableSeats || !ridePrice) {
             alert('Please fill in all required fields.');
             return;
         }
@@ -65,7 +67,7 @@ const RideCreation = () => {
             pickupLocation: currentLocation,
             dropoffLocation: destination,
             departureTime: `${new Date().toISOString().split('T')[0]}T${departureTime}:00`, // Format departure time
-            arrivalTime: `${new Date().toISOString().split('T')[0]}T${arrivalTime}:00`, // Format arrival time
+            departureDate: departureDate, // Format arrival time
             availableSeats: parseInt(availableSeats, 10), // Convert to number
             ridePrice: parseInt(ridePrice),
         };
@@ -81,7 +83,7 @@ const RideCreation = () => {
 
             // Send the ride creation request to the backend with the Authorization header
             await axios.post(
-                'http://20.0.235.239:5000/api/rides/create',
+                'http://20.0.183.85:5000/api/rides/create',
                 ridePayload,
                 {
                     headers: {
@@ -95,7 +97,7 @@ const RideCreation = () => {
             setCurrentLocation('');
             setDestination('');
             setDepartureTime('');
-            setArrivalTime('');
+            setDepartureDate('');
             setAvailableSeats('');
             setRidePrice('');
         } catch (error) {
@@ -160,18 +162,20 @@ const RideCreation = () => {
                     />
                 </div>
 
-                {/* Arrival Time Field */}
+                {/* Date of Depature Field */}
                 <div className="mb-3">
                     <label htmlFor="arrivalTime" className="form-label">
-                        Arrival Time
+                        Date of Depature
                     </label>
-                    <input
-                        type="time"
-                        id="arrivalTime"
-                        className="form-control"
-                        value={arrivalTime}
-                        onChange={(e) => setArrivalTime(e.target.value)}
-                        required
+
+                    <DatePicker
+                        selected={departureDate} // Default value: today's date
+                        onChange={(date) => setDepartureDate(date)} // Update state when a date is selected
+                        dateFormat="dd/MM/yyyy" // Format of the displayed date
+                        className="form-control" // Bootstrap styling
+                        placeholderText="Select date" // Placeholder text when no date is selected
+                        minDate={new Date()} // Prevent selecting past dates
+                        style={{ width: '120px' }} // Adjust width of the DatePicker
                     />
                 </div>
 
@@ -245,7 +249,7 @@ const RideCreation = () => {
                         !currentLocation ||
                         !destination ||
                         !departureTime ||
-                        !arrivalTime ||
+                        !departureDate ||
                         !availableSeats
                     }
                 >

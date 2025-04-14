@@ -70,7 +70,7 @@ const PaymentOptions = () => {
             setShowProcessingModal(true);
 
             // Send POST request to the backend
-            const response = await axios.post("http://20.0.235.239:5000/api/stkpush", requestData, {
+            const response = await axios.post("http://20.0.183.85:5000/api/stkpush", requestData, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
@@ -109,9 +109,120 @@ const PaymentOptions = () => {
                 </Link>
             </div>
 
-            {/* Payment Card */}
+            {/* New Booking Submission Section */}
             <div className="row justify-content-flexstart">
-                <div className="col-md-6">
+                <div className="col-md-8 mb-4"> {/* Increased column width from col-md-6 to col-md-8 */}
+                    {/* Card Container */}
+                    <div
+                        className="card booking-card rounded shadow-lg"
+                        style={{
+                            border: '2px solid #007bff', // Blue border
+                            backgroundColor: '#007bff', // Blue background
+                            color: '#ffffff',          // White text
+                            padding: '2rem',           // Add padding for spacing
+                            borderRadius: '10px',      // Rounded corners for a polished look
+                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Subtle shadow for depth
+                        }}
+                    >
+                        <div className="card-body">
+                            {/* Title Section */}
+                            <h3 className="mb-3 text-center text-white" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
+                                📝 Booking Submission
+                            </h3>
+
+                            {/* Cancellation Notice */}
+                            <p className="text-center mb-4" style={{ fontSize: '0.9rem' }}>
+                                Need to Cancel or Change your ticket?{' '}
+                                <a href="mailto:cancellation@easycoachkenya.com" className="text-white fw-bold">
+                                    Email our Team: cancellation@easycoachkenya.com
+                                </a>
+                            </p>
+
+                            {/* Form Section */}
+                            <form>
+                                {/* First Name and Last Name */}
+                                <div className="row g-3">
+                                    <div className="col-md-6">
+                                        <label htmlFor="firstName" className="form-label" style={{ color: '#ffffff' }}>
+                                            First Name <span className="text-danger">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control-sm"
+                                            id="firstName"
+                                            placeholder="First name"
+                                            required
+                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
+                                        />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label htmlFor="lastName" className="form-label" style={{ color: '#ffffff' }}>
+                                            Last Name <span className="text-danger">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control-sm"
+                                            id="lastName"
+                                            placeholder="Last name"
+                                            required
+                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* ID/Passport and Residence */}
+                                <div className="row g-3 mt-3">
+                                    <div className="col-md-6">
+                                        <label htmlFor="idPassport" className="form-label" style={{ color: '#ffffff' }}>
+                                            ID/Passport <span className="text-danger">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control-sm"
+                                            id="idPassport"
+                                            placeholder="ID No or Passport"
+                                            required
+                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
+                                        />
+                                    </div>
+                                    <div className="col-md-6">
+                                        <label htmlFor="residence" className="form-label" style={{ color: '#ffffff' }}>
+                                            Residence <span className="text-danger">*</span>
+                                        </label>
+                                        <input
+                                            type="text"
+                                            className="form-control form-control-sm"
+                                            id="residence"
+                                            placeholder="Nairobi"
+                                            value="Nairobi"
+                                            disabled
+                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Phone Number */}
+                                <div className="mt-3">
+                                    <label htmlFor="phone" className="form-label" style={{ color: '#ffffff' }}>
+                                        Passenger Phone Number <span className="text-danger">*</span>
+                                    </label>
+                                    <input
+                                        type="tel"
+                                        className="form-control form-control-sm"
+                                        id="phone"
+                                        placeholder="e.g. 0722000000"
+                                        required
+                                        style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
+                                    />
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {/* Payment Card */}
+            <div className="row justify-content-flexend">
+                <div className="col-md-8">
                     <div className="card payment-card text-white rounded">
                         <div className="card-body">
                             {/* Total Due */}
@@ -132,9 +243,6 @@ const PaymentOptions = () => {
                                     onChange={handlePaymentMethodChange} // Handle selection change
                                 >
                                     <option value="mpesa">Pay via M-Pesa</option>
-                                    <option value="bank-transfer">Bank Transfer</option>
-                                    <option value="paypal">PayPal</option>
-                                    <option value="card">MasterCard, Visa, ATM, Debit & Credit</option>
                                 </select>
                             </div>
 

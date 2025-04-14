@@ -21,7 +21,7 @@ const rideSchema = new mongoose.Schema(
             type: Date,
             required: true,
         },
-        arrivalTime: {
+        departureDate: {
             type: Date,
             required: true,
         },

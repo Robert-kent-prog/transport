@@ -8,7 +8,7 @@ export const createRide = async (req, res) => {
             return res.status(401).json({ error: 'Unauthorized. User not found in request.' });
         }
 
-        const { pickupLocation, dropoffLocation, departureTime, arrivalTime, availableSeats, ridePrice } = req.body;
+        const { pickupLocation, dropoffLocation, departureTime, departureDate, availableSeats, ridePrice } = req.body;
         const userId = req.user.userId; // Extract userId from token
 
         if (!userId) {
@@ -25,7 +25,7 @@ export const createRide = async (req, res) => {
             pickupLocation,
             dropoffLocation,
             departureTime: new Date(departureTime),
-            arrivalTime: new Date(arrivalTime),
+            departureDate: new Date(departureDate),
             availableSeats: parseInt(availableSeats, 10),
             ridePrice: parseInt(ridePrice, 10),
         });
@@ -42,20 +42,49 @@ export const createRide = async (req, res) => {
     }
 };
 
-// Function to fetch all rides
+// controllers/rideController.js
 export const getAllRides = async (req, res) => {
     try {
-        const rides = await Ride.find()
-            .populate('driver', 'name role carDetails') // Include driver's name, role, and car details
+        const { from, to, date } = req.query;
+
+        // Build query object
+        const query = {};
+
+        // Case-insensitive filtering for pickupLocation and dropoffLocation
+        if (from) {
+            query.pickupLocation = { $regex: new RegExp(`^${from}$`, 'i') };
+        }
+        if (to) {
+            query.dropoffLocation = { $regex: new RegExp(`^${to}$`, 'i') };
+        }
+
+        // Handle date filtering
+        if (date) {
+            const startDate = new Date(date); // Parse input date (YYYY-MM-DD)
+            const endDate = new Date(startDate);
+            endDate.setDate(endDate.getDate() + 1); // Next day
+
+            query.departureDate = {
+                $gte: startDate, // Greater than or equal to start of day
+                $lt: endDate     // Less than start of next day
+            };
+        }
+
+        // Fetch and populate rides
+        const rides = await Ride.find(query)
+            .populate({
+                path: 'driver',
+                select: 'name role carDetails -_id',
+                populate: { path: 'carDetails', select: 'make model licensePlate' }
+            })
             .exec();
 
         res.status(200).json(rides);
     } catch (error) {
         console.error('Error fetching rides:', error);
-        res.status(500).json({ error: error.message });
+        res.status(500).json({ error: 'Failed to fetch rides' });
     }
 };
-
 // Function to update the status of a ride by ID
 export const updateRideDetails = async (req, res) => {
     try {

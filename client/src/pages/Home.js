@@ -1,20 +1,25 @@
-// src/pages/Home.js
-
 import React from 'react';
+import './RideBookingForm.css';
+import RideBookingForm from './RideBookingForm';
 
-const Home = () => {
+function Home() {
     return (
-        <div className="container mt-5">
-            {/* Custom Jumbotron using Bootstrap utility classes */}
-            <div className="p-5 mb-4 bg-light rounded-3">
-                <h1 className="display-4">Welcome to RideShare</h1>
-                <p className="lead">Find or offer rides with ease!</p>
-                <a href="/register" className="btn btn-primary btn-lg">
-                    Get Started
-                </a>
-            </div>
+        <div className="App">
+            <main>
+                <div className="hero-image">
+                    <img
+                        src="https://source.unsplash.com/random/1600x400/?bus"
+                        alt="Buses"
+                        className="w-100"
+                    />
+                    <div className="overlay text-center">
+                        <h2>Experience Dignity</h2>
+                    </div>
+                </div>
+                <RideBookingForm />
+            </main>
         </div>
     );
-};
+}
 
 export default Home;

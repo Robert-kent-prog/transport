@@ -20,7 +20,7 @@ const DriverDashboard = () => {
             }
 
             try {
-                const response = await axios.get('http://20.0.235.239:5000/api/rides/all', {
+                const response = await axios.get('http://20.0.183.85:5000/api/rides/all', {
                     headers: { Authorization: `Bearer ${accessToken}` },
                 });
 
@@ -65,7 +65,7 @@ const DriverDashboard = () => {
 
         try {
             await axios.put(
-                `http://20.0.235.239:5000/api/rides/update/${selectedRide._id}`,
+                `http://20.0.183.85:5000/api/rides/update/${selectedRide._id}`,
                 { status: updatedStatus, availableSeats: updatedSeats },
                 { headers: { Authorization: `Bearer ${accessToken}` } }
             );
@@ -90,7 +90,7 @@ const DriverDashboard = () => {
         }
 
         try {
-            await axios.delete(`http://20.0.235.239:5000/api/rides/delete/${rideId}`, {
+            await axios.delete(`http://20.0.183.85:5000/api/rides/delete/${rideId}`, {
                 headers: { Authorization: `Bearer ${accessToken}` },
             });
 
@@ -113,7 +113,7 @@ const DriverDashboard = () => {
                         <th>Location</th>
                         <th>Destination</th>
                         <th>Dept. Time</th>
-                        <th>Arrival Time</th>
+                        <th>Dept. Date</th>
                         <th>Seats</th>
                         <th>Amount</th> {/* Added Amount column */}
                         <th>Ride Status</th>
@@ -127,7 +127,7 @@ const DriverDashboard = () => {
                             <td>{ride.pickupLocation}</td>
                             <td>{ride.dropoffLocation}</td>
                             <td>{new Date(ride.departureTime).toLocaleTimeString()}</td>
-                            <td>{new Date(ride.arrivalTime).toLocaleTimeString()}</td>
+                            <td>{new Date(ride.departureDate).toLocaleDateString()}</td>
                             <td>{ride.availableSeats}</td>
                             <td>{ride.ridePrice || 'N/A'}</td> {/* Display amount or fallback to 'N/A' */}
                             <td>{rideStatuses[ride._id]}</td>

@@ -21,7 +21,7 @@ const DriverDashboard = () => {
             }
 
             try {
-                const response = await axios.get('http://20.0.235.239:5000/api/rides/all', {
+                const response = await axios.get('http://20.0.183.85:5000/api/rides/all', {
                     headers: {
                         Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
                     },
@@ -97,7 +97,7 @@ const DriverDashboard = () => {
                         <th>Location</th>
                         <th>Destination</th>
                         <th>Departure Time</th>
-                        <th>Arrival Time</th>
+                        <th>Departure Date</th>
                         <th>Available Seats</th>
                         <th>Amount</th>
                         <th>Bookings</th> {/* New column for BookOnPay button */}
@@ -111,7 +111,7 @@ const DriverDashboard = () => {
                                 <td>{ride.pickupLocation}</td>
                                 <td>{ride.dropoffLocation}</td>
                                 <td>{new Date(ride.departureTime).toLocaleTimeString()}</td>
-                                <td>{new Date(ride.arrivalTime).toLocaleTimeString()}</td>
+                                <td>{new Date(ride.departureDate).toLocaleDateString()}</td>
                                 <td>{ride.availableSeats}</td>
                                 <td>{ride.ridePrice || 'N/A'}</td>
                                 <td>

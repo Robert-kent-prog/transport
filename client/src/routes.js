@@ -14,6 +14,7 @@ import Chat from './pages/Chat';
 import AboutUs from './pages/AboutPage';
 import ContactUs from './pages/ContactPage';
 import PaymentOptions from './pages/PaymentOptions';
+import BusBookingPage from './pages/BusBookingPage';
 
 const Router = () => {
     return (
@@ -23,6 +24,7 @@ const Router = () => {
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/create-ride" element={<RideCreation />} />
+            <Route path="/bus-booking" element={<BusBookingPage />} />
             <Route path="/passenger-dashboard" element={<PassengerDashboard />} />
             <Route path="/payment-options/:rideId/:ridePrice" element={<PaymentOptions />} />
             <Route path="/driver-profile/:rideId" element={<DriverProfile />} />
