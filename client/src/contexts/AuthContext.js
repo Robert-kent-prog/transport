@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }) => {
         }
 
         try {
-            const response = await fetch("http://20.0.183.85:5000/api/authenticate/login", {
+            const response = await fetch("http://192.168.100.16:5000/api/authenticate/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(credentials),

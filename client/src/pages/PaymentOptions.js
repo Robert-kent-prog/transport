@@ -1,292 +1,259 @@
 import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import "./PaymentOption.css";
 import axios from "axios";
 
 const PaymentOptions = () => {
-    const { rideId, ridePrice } = useParams(); // Extract ride ID and price from URL
+    const { ridePrice } = useParams(); // Only keep ridePrice since rideId isn't used
     const [mpesaNumber, setMpesaNumber] = useState("");
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("mpesa");
-    const [showConfirmationModal, setShowConfirmationModal] = useState(false); // Confirmation modal state
-    const [showProcessingModal, setShowProcessingModal] = useState(false); // Processing modal state
+    const routelocation = useLocation(); // Get access to location state
+    const { fromLocation, toLocation, departureDate } = routelocation.state || {}; // Get locations from state
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [idPassport, setIdPassport] = useState("");
+    const [showConfirmationModal, setShowConfirmationModal] = useState(false);
+    const [showProcessingModal, setShowProcessingModal] = useState(false);
 
-    // Function to handle payment method change
-    const handlePaymentMethodChange = (e) => {
-        const selectedMethod = e.target.value;
-        setSelectedPaymentMethod(selectedMethod);
+    console.log('Ride Price:', ridePrice, 'From Location:', fromLocation, 'To Location:', toLocation, 'Selected Date:', departureDate);
 
-        if (selectedMethod !== "mpesa") {
-            alert("Payment is not available at this time for this method.");
+    const textInputChange = (val, isMpesa = false) => {
+        const sanitizedInput = val.replace(/[^0-9]/g, "").slice(0, 10);
+        if (isMpesa) {
+            setMpesaNumber(sanitizedInput);
+        } else {
+            setPhoneNumber(sanitizedInput);
         }
     };
 
-    // Function to sanitize and validate phone input
-    const textInputChange = (val) => {
-        // Remove non-numeric characters and limit to 10 digits
-        const sanitizedInput = val.replace(/[^0-9]/g, "").slice(0, 10);
-        setMpesaNumber(sanitizedInput); // Update the M-PESA number state
-    };
-
-    // Function to handle sending payment request
-    const handleSendPaymentRequest = async () => {
-        // Validate M-PESA number
+    const handleSendPaymentRequest = async (e) => {
+        e.preventDefault();
         if (!mpesaNumber.trim() || mpesaNumber.length !== 10) {
-            alert("Please enter a valid 10-digit M-PESA number.");
+            alert("Please enter a valid 9-digit M-PESA number (without country code).");
             return;
         }
-
-        // Show confirmation modal
+        if (!phoneNumber.trim() || phoneNumber.length !== 10) {
+            alert("Please enter a valid 9-digit phone number (without country code).");
+            return;
+        }
         setShowConfirmationModal(true);
-
-        // Clear the M-PESA number field after initiating the process
     };
 
-    // Function to handle confirmation modal actions
     const handleConfirmation = (confirm) => {
-        setShowConfirmationModal(false); // Close confirmation modal
-
+        setShowConfirmationModal(false);
         if (confirm) {
-            // Proceed with payment request
             initiatePayment();
         }
     };
 
-    // Function to initiate payment
     const initiatePayment = async () => {
         const accessToken = localStorage.getItem('accessToken');
         if (!accessToken) {
             console.error('No access token found in localStorage');
             return;
         }
-
-        // Prepare the request body
         const requestData = {
-            amount: ridePrice, // Send ridePrice as the amount
-            phone: mpesaNumber, // Send the entered M-PESA number
+            amount: ridePrice,
+            phone: `254${mpesaNumber}`,
         };
-
         try {
-            // Show processing modal
             setShowProcessingModal(true);
-
-            // Send POST request to the backend
-            const response = await axios.post("http://20.0.183.85:5000/api/stkpush", requestData, {
+            await axios.post("http://192.168.100.16:5000/api/stkpush", requestData, {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
+                    Authorization: `Bearer ${accessToken}`,
                 },
             });
-
-            setMpesaNumber(""); // Clear the input field
-            console.log("Payment request successful:", response.data);
-
-            // Keep the processing modal open to show success message
+            setMpesaNumber("");
+            console.log("Payment request successful");
         } catch (error) {
             console.error("Error initiating payment:", error.response ? error.response.data : error.message);
-
-            // Hide processing modal and display an error message
             setShowProcessingModal(false);
             alert("Failed to initiate payment. Please try again later.");
         }
     };
 
     return (
-        <div className="container mt-5">
-            {/* Ride ID and View Driver Profile Section */}
-            <div className="mb-4">
-                <h2>Payment for Ride ID: {rideId}</h2>
-                <p>
-                    Select a payment method to proceed with booking ride ID:{" "}
-                    <strong>{rideId}</strong>
-                </p>
-
-                {/* View Driver Profile Button */}
-                <Link
-                    to={`/driver-profile/${rideId}`} // Navigate to driver profile page
-                    className="btn btn-primary"
-                >
-                    View Driver Profile
-                </Link>
-            </div>
-
-            {/* New Booking Submission Section */}
-            <div className="row justify-content-flexstart">
-                <div className="col-md-8 mb-4"> {/* Increased column width from col-md-6 to col-md-8 */}
-                    {/* Card Container */}
-                    <div
-                        className="card booking-card rounded shadow-lg"
-                        style={{
-                            border: '2px solid #007bff', // Blue border
-                            backgroundColor: '#007bff', // Blue background
-                            color: '#ffffff',          // White text
-                            padding: '2rem',           // Add padding for spacing
-                            borderRadius: '10px',      // Rounded corners for a polished look
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)', // Subtle shadow for depth
-                        }}
-                    >
-                        <div className="card-body">
-                            {/* Title Section */}
-                            <h3 className="mb-3 text-center text-white" style={{ fontSize: '1.5rem', fontWeight: 'bold' }}>
-                                📝 Booking Submission
-                            </h3>
-
-                            {/* Cancellation Notice */}
-                            <p className="text-center mb-4" style={{ fontSize: '0.9rem' }}>
+        <div className="container py-5" style={{ marginTop: '30px' }}>
+            <div className="row">
+                {/* Left Section: Booking Form */}
+                <div className="col-lg-7 pe-lg-5">
+                    {/* Booking Submission Card */}
+                    <div className="card border-0 shadow-sm mb-4">
+                        <div className="card-body p-4">
+                            <h2 className="mb-4 fw-bold text-primary">Booking Submission</h2>
+                            <div className="alert alert-info">
                                 Need to Cancel or Change your ticket?{' '}
-                                <a href="mailto:cancellation@easycoachkenya.com" className="text-white fw-bold">
-                                    Email our Team: cancellation@easycoachkenya.com
-                                </a>
-                            </p>
+                                Email our Team:
+                                <button className="btn btn-link p-0 align-baseline"
+                                    onClick={() => window.location.href = "mailto:cancellation@rideshare.com"}>
+                                    cancellation@rideshare.com
+                                </button>
+                            </div>
 
-                            {/* Form Section */}
-                            <form>
-                                {/* First Name and Last Name */}
+                            <form onSubmit={handleSendPaymentRequest}>
+                                <h5 className="mt-4 mb-3 fw-bold border-bottom pb-2">Passenger Details</h5>
                                 <div className="row g-3">
                                     <div className="col-md-6">
-                                        <label htmlFor="firstName" className="form-label" style={{ color: '#ffffff' }}>
-                                            First Name <span className="text-danger">*</span>
-                                        </label>
+                                        <label htmlFor="firstName" className="form-label">First Name <span className="text-danger">*</span></label>
                                         <input
                                             type="text"
-                                            className="form-control form-control-sm"
+                                            className="form-control"
                                             id="firstName"
                                             placeholder="First name"
+                                            value={firstName}
+                                            onChange={(e) => setFirstName(e.target.value)}
                                             required
-                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
                                         />
                                     </div>
                                     <div className="col-md-6">
-                                        <label htmlFor="lastName" className="form-label" style={{ color: '#ffffff' }}>
-                                            Last Name <span className="text-danger">*</span>
-                                        </label>
+                                        <label htmlFor="lastName" className="form-label">Last Name <span className="text-danger">*</span></label>
                                         <input
                                             type="text"
-                                            className="form-control form-control-sm"
+                                            className="form-control"
                                             id="lastName"
                                             placeholder="Last name"
+                                            value={lastName}
+                                            onChange={(e) => setLastName(e.target.value)}
                                             required
-                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
                                         />
                                     </div>
                                 </div>
 
-                                {/* ID/Passport and Residence */}
-                                <div className="row g-3 mt-3">
+                                <div className="row g-3 mt-1">
                                     <div className="col-md-6">
-                                        <label htmlFor="idPassport" className="form-label" style={{ color: '#ffffff' }}>
-                                            ID/Passport <span className="text-danger">*</span>
-                                        </label>
+                                        <label htmlFor="idPassport" className="form-label">ID/Passport <span className="text-danger">*</span></label>
                                         <input
                                             type="text"
-                                            className="form-control form-control-sm"
+                                            className="form-control"
                                             id="idPassport"
                                             placeholder="ID No or Passport"
+                                            value={idPassport}
+                                            onChange={(e) => setIdPassport(e.target.value)}
                                             required
-                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
                                         />
                                     </div>
                                     <div className="col-md-6">
-                                        <label htmlFor="residence" className="form-label" style={{ color: '#ffffff' }}>
-                                            Residence <span className="text-danger">*</span>
-                                        </label>
+                                        <label htmlFor="residence" className="form-label">Residence <span className="text-danger">*</span></label>
                                         <input
                                             type="text"
-                                            className="form-control form-control-sm"
+                                            className="form-control"
                                             id="residence"
                                             placeholder="Nairobi"
-                                            value="Nairobi"
+                                            value={fromLocation || "Nairobi"}
                                             disabled
-                                            style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
                                         />
                                     </div>
                                 </div>
 
-                                {/* Phone Number */}
                                 <div className="mt-3">
-                                    <label htmlFor="phone" className="form-label" style={{ color: '#ffffff' }}>
-                                        Passenger Phone Number <span className="text-danger">*</span>
-                                    </label>
-                                    <input
-                                        type="tel"
-                                        className="form-control form-control-sm"
-                                        id="phone"
-                                        placeholder="e.g. 0722000000"
-                                        required
-                                        style={{ backgroundColor: '#cce5ff', borderColor: '#b8daff', color: '#000000' }} // Light blue input background
-                                    />
+                                    <label htmlFor="phoneNumber" className="form-label">Passenger Phone Number <span className="text-danger">*</span></label>
+                                    <div className="input-group">
+                                        <span className="input-group-text">+254</span>
+                                        <input
+                                            type="tel"
+                                            className="form-control"
+                                            id="phoneNumber"
+                                            placeholder="e.g. 700000000"
+                                            value={phoneNumber}
+                                            onChange={(e) => textInputChange(e.target.value)}
+                                            maxLength="10"
+                                            required
+                                        />
+                                    </div>
                                 </div>
                             </form>
                         </div>
                     </div>
-                </div>
-            </div>
-            {/* Payment Card */}
-            <div className="row justify-content-flexend">
-                <div className="col-md-8">
-                    <div className="card payment-card text-white rounded">
-                        <div className="card-body">
-                            {/* Total Due */}
-                            <div className="mb-3">
-                                <h5>Total Due</h5>
-                                <h3>Ksh {ridePrice}</h3> {/* Display ridePrice */}
-                            </div>
 
-                            {/* Payment Method Dropdown */}
+                    {/* Payment Information Card */}
+                    <div className="card border-0 shadow-sm">
+                        <div className="card-body p-4">
+                            <h2 className="mb-4 fw-bold text-primary">Payment Information</h2>
                             <div className="mb-3">
-                                <label htmlFor="paymentMethod" className="form-label">
-                                    Payment Method:
-                                </label>
-                                <select
-                                    className="form-select rounded"
-                                    id="paymentMethod"
-                                    value={selectedPaymentMethod}
-                                    onChange={handlePaymentMethodChange} // Handle selection change
-                                >
-                                    <option value="mpesa">Pay via M-Pesa</option>
-                                </select>
-                            </div>
-
-                            {/* M-Pesa Number Input */}
-                            {selectedPaymentMethod === "mpesa" && (
-                                <div className="mb-3">
-                                    <label htmlFor="mpesaNumber" className="form-label">
-                                        Enter your M-PESA number below to receive a prompt on your phone
-                                    </label>
+                                <label htmlFor="mpesaNumber" className="form-label">Safaricom M-Pesa Number <span className="text-danger">*</span></label>
+                                <div className="input-group">
+                                    <span className="input-group-text">+254</span>
                                     <input
                                         type="text"
-                                        className="form-control rounded"
+                                        className="form-control"
                                         id="mpesaNumber"
-                                        placeholder="e.g 254700000000"
+                                        placeholder="e.g. 700000000"
                                         value={mpesaNumber}
-                                        onChange={(e) => textInputChange(e.target.value)} // Use sanitization function
+                                        onChange={(e) => textInputChange(e.target.value, true)}
+                                        maxLength="10"
+                                        required
                                     />
                                 </div>
-                            )}
+                                <small className="text-muted">Your SMS will be sent to this number</small>
+                            </div>
 
-                            {/* Send Payment Request Button */}
-                            {selectedPaymentMethod === "mpesa" && (
-                                <button
-                                    className="btn btn-light w-100 mb-3 rounded"
-                                    onClick={handleSendPaymentRequest}
-                                >
-                                    Send payment request
-                                </button>
-                            )}
+                            <div className="alert alert-warning mt-4">
+                                <strong>Please Note:</strong> Once seats are selected and paid for, they cannot be changed. Tickets are non-refundable.
+                            </div>
 
-                            {/* Static Fields */}
-                            <div>
-                                <p>
-                                    <strong>Enter business no:</strong>{" "}
-                                    <span className="text-danger">4123955</span>
-                                </p>
-                                <p>
-                                    <strong>Enter account no:</strong>{" "}
-                                    <span className="text-danger">472379</span>
-                                </p>
-                                <p>
-                                    <strong>Enter amount:</strong>{" "}
-                                    <span className="text-danger">Ksh {ridePrice}</span> {/* Dynamic amount */}
-                                </p>
+                            <div className="form-check mt-3">
+                                <input
+                                    className="form-check-input"
+                                    type="checkbox"
+                                    id="termsCheckbox"
+                                    required
+                                />
+                                <label className="form-check-label" htmlFor="termsCheckbox">
+                                    I agree to the <button className="btn btn-link p-0 align-baseline" onClick={() => { }}>Terms and Conditions</button> and <button className="btn btn-link p-0 align-baseline" onClick={() => { }}>Privacy Policy</button>
+                                </label>
+                            </div>
+
+                            <button
+                                className="btn btn-primary btn-lg w-100 mt-4 py-3 fw-bold"
+                                type="submit"
+                                onClick={handleSendPaymentRequest}
+                                form="paymentForm"
+                            >
+                                <i className="fas fa-mobile-alt me-2"></i> Pay Ksh {ridePrice} with M-Pesa
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Right Section: Booking Summary */}
+                <div className="col-lg-5">
+                    <div className="card border-0 shadow-sm">
+                        <div className="card-body p-4">
+                            <h2 className="mb-4 fw-bold text-primary">Your Booking</h2>
+                            <div className="text-center mb-4">
+                                <img src="../images/bus.jpeg" alt="Bus" className="img-fluid rounded" />
+                            </div>
+
+                            <h5 className="fw-bold">{fromLocation} - {toLocation} </h5>
+                            <ul className="list-unstyled mb-4">
+                                <li className="mb-2"><i className="fas fa-clock text-primary me-2"></i> Departure: <strong>21:00 PM (night)</strong></li>
+                                <li><i className="fas fa-clock text-primary me-2"></i> Arrival: <strong>5:30 AM (night)</strong></li>
+                            </ul>
+
+                            <h5 className="fw-bold border-top pt-3">Order Details</h5>
+                            <ul className="list-unstyled">
+                                <li className="d-flex justify-content-between mb-2">
+                                    <span>Passenger(s):</span>
+                                    <span className="fw-bold">1</span>
+                                </li>
+                                <li className="d-flex justify-content-between mb-2">
+                                    <span>Base Fare:</span>
+                                    <span className="fw-bold">Ksh {ridePrice}</span>
+                                </li>
+                                <li className="d-flex justify-content-between mb-2">
+                                    <span>Service Fee:</span>
+                                    <span className="fw-bold">Ksh 0</span>
+                                </li>
+                                <li className="d-flex justify-content-between border-top pt-2 mt-2">
+                                    <span className="fw-bold">Total Price:</span>
+                                    <span className="fw-bold text-primary fs-5">Ksh {ridePrice}</span>
+                                </li>
+                            </ul>
+
+                            <div className="alert alert-success mt-4">
+                                <i className="fas fa-info-circle me-2"></i>
+                                Your booking will be confirmed once payment is received.
                             </div>
                         </div>
                     </div>
@@ -294,88 +261,66 @@ const PaymentOptions = () => {
             </div>
 
             {/* Confirmation Modal */}
-            <div
-                className={`modal fade ${showConfirmationModal ? "show d-block" : ""}`}
-                tabIndex="-1"
-                style={{ display: showConfirmationModal ? "block" : "none", backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-            >
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header bg-primary text-white">
-                            <h5 className="modal-title">Confirm Ride Booking</h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                onClick={() => setShowConfirmationModal(false)}
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            <p>Please confirm ride booking for this amount Ksh {ridePrice}</p>
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={() => setShowConfirmationModal(false)}
-                            >
-                                No
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-success"
-                                onClick={() => handleConfirmation(true)}
-                            >
-                                Yes
-                            </button>
+            {showConfirmationModal && (
+                <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header bg-primary text-white">
+                                <h5 className="modal-title">Confirm Ride Booking</h5>
+                                <button type="button" className="btn-close btn-close-white" onClick={() => setShowConfirmationModal(false)}></button>
+                            </div>
+                            <div className="modal-body">
+                                <p>Please confirm ride booking for this amount:</p>
+                                <h4 className="text-center my-3">Ksh {ridePrice}</h4>
+                                <p className="text-muted">You will receive an M-Pesa prompt on +254{mpesaNumber} shortly.</p>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-outline-secondary" onClick={() => setShowConfirmationModal(false)}>
+                                    Cancel
+                                </button>
+                                <button type="button" className="btn btn-primary" onClick={() => handleConfirmation(true)}>
+                                    Confirm Payment
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
 
             {/* Processing Modal */}
-            <div
-                className={`modal fade ${showProcessingModal ? "show d-block" : ""}`}
-                tabIndex="-1"
-                style={{ display: showProcessingModal ? "block" : "none", backgroundColor: "rgba(0, 0, 0, 0.5)" }}
-            >
-                <div className="modal-dialog modal-dialog-centered">
-                    <div className="modal-content">
-                        <div className="modal-header bg-primary text-white">
-                            <h5 className="modal-title">Complete Booking</h5>
-                            <button
-                                type="button"
-                                className="btn-close"
-                                onClick={() => setShowProcessingModal(false)}
-                            ></button>
-                        </div>
-                        <div className="modal-body">
-                            <p>
-                                <strong>Do you wish to Book a Ride @{ridePrice}/-? </strong>
-                            </p>
-                            <p>
-                                You will receive a Mpesa Prompt requesting a payment of Ksh. {ridePrice} on the phone
-                                number {mpesaNumber}
-                            </p>
-                        </div>
-                        <div className="modal-footer">
-                            <button
-                                type="button"
-                                className="btn btn-secondary"
-                                onClick={() => setShowProcessingModal(false)}
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                type="button"
-                                className="btn btn-success"
-                                onClick={() => setShowProcessingModal(false)}
-                            >
-                                Waiting...
-                            </button>
+            {showProcessingModal && (
+                <div className="modal fade show d-block" style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}>
+                    <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                            <div className="modal-header bg-primary text-white">
+                                <h5 className="modal-title">Complete Booking</h5>
+                                <button type="button" className="btn-close btn-close-white" onClick={() => setShowProcessingModal(false)}></button>
+                            </div>
+                            <div className="modal-body text-center">
+                                <div className="spinner-border text-primary mb-3" role="status">
+                                    <span className="visually-hidden">Loading...</span>
+                                </div>
+                                <h5 className="mb-3">Processing Your Payment</h5>
+                                <p>
+                                    <strong>Booking amount: Ksh {ridePrice}</strong>
+                                </p>
+                                <p>
+                                    You will receive a M-Pesa prompt on <strong>+254{mpesaNumber}</strong>
+                                </p>
+                                <div className="alert alert-info mt-3">
+                                    <i className="fas fa-info-circle me-2"></i>
+                                    Please check your phone and enter your M-Pesa PIN when prompted.
+                                </div>
+                            </div>
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-secondary" onClick={() => setShowProcessingModal(false)}>
+                                    Cancel Booking
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            )}
         </div>
     );
 };

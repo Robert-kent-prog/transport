@@ -31,7 +31,7 @@ const DriverProfile = () => {
                 }
 
                 // Fetch driver details using the user ID
-                const response = await axios.get(`http://20.0.183.85:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
+                const response = await axios.get(`http://192.168.100.16:5000/api/auth/users/${userId}`); // Endpoint to fetch driver details
                 setDriverDetails(response.data);
             } catch (error) {
                 console.error('Error fetching driver details:', error);
