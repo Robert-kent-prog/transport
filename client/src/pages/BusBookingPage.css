@@ -1,0 +1,28 @@
+/* Custom Dropdown Menu Styles */
+.custom-dropdown-menu {
+  max-height: 200px; /* Limit the height of the dropdown menu */
+  overflow-y: auto; /* Enable vertical scrolling */
+  border: 1px solid #ced4da; /* Add a border for better visibility */
+  background-color: #fff; /* Ensure the background is white */
+}
+
+/* Optional: Style the scrollbar (optional enhancement) */
+.custom-dropdown-menu::-webkit-scrollbar {
+  width: 8px;
+}
+
+.custom-dropdown-menu::-webkit-scrollbar-thumb {
+  background-color: #ced4da;
+  border-radius: 4px;
+}
+
+.custom-dropdown-menu::-webkit-scrollbar-track {
+  background-color: #f8f9fa;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .table-responsive-md {
+    overflow-x: auto;
+  }
+}
