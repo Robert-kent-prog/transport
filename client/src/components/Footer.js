@@ -44,8 +44,8 @@ const Footer = () => {
                     <Col lg={3} md={6} className="footer-col">
                         <h4>Contact Info</h4>
                         <ul className="contact-info">
-                            <li><i className="icon-placeholder"></i> 123 Ride St, Mobility City</li>
-                            <li><i className="icon-phone"></i> +1 (555) 123-4567</li>
+                            <li><i className="icon-placeholder"></i> University Way, Chiromo, Nairobi</li>
+                            <li><i className="icon-phone"></i> +254 793587026</li>
                             <li><i className="icon-email"></i> support@rideshareapp.com</li>
                         </ul>
                     </Col>
