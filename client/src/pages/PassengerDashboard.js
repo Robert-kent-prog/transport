@@ -21,7 +21,7 @@ const DriverDashboard = () => {
             }
 
             try {
-                const response = await axios.get('http://192.168.100.16:5000/api/rides/all', {
+                const response = await axios.get('http://192.168.100.175:5000/api/rides/all', {
                     headers: {
                         Authorization: `Bearer ${accessToken}`, // Include the access token in the headers
                     },

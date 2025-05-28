@@ -26,7 +26,7 @@ body {
   box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1); /* Optional: Add a subtle shadow for separation */
   padding: 1rem 0; /* Add vertical padding for spacing */
   text-align: center; /* Center align the footer content */
-  /* margin-top: 200px; */
+  margin-top: auto;
 }
 
 /* Responsive Design */

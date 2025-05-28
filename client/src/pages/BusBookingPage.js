@@ -93,7 +93,7 @@ const BusBookingPage = () => {
             try {
                 const formattedDate = selectedDate.toISOString().split('T')[0];
                 const response = await fetch(
-                    `http://192.168.100.16:5000/api/rides/all?from=${encodeURIComponent(fromLocation)}&to=${encodeURIComponent(toLocation)}&date=${formattedDate}`
+                    `http://192.168.100.175:5000/api/rides/all?from=${encodeURIComponent(fromLocation)}&to=${encodeURIComponent(toLocation)}&date=${formattedDate}`
                 );
 
                 if (!response.ok) {

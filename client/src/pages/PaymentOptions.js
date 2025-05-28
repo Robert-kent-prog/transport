@@ -58,7 +58,7 @@ const PaymentOptions = () => {
         };
         try {
             setShowProcessingModal(true);
-            await axios.post("http://192.168.100.16:5000/api/stkpush", requestData, {
+            await axios.post("http://192.168.100.175:5000/api/stkpush", requestData, {
                 headers: {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${accessToken}`,
