@@ -1,0 +1,41 @@
+/* ======================
+   STICKY FOOTER SOLUTION
+   ====================== */
+
+/* 1. Core Structure */
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content-wrap {
+  flex: 1;
+  /* This pushes the footer down */
+}
+
+/* 2. Navbar spacing (adjust based on your navbar height) */
+.content-wrap {
+  padding-top: 70px; /* Should match your navbar height */
+}
+
+/* 3. Debugging styles (remove after verification) */
+.debug .app-container {
+  outline: 2px dashed red;
+}
+
+.debug .content-wrap {
+  outline: 2px dashed blue;
+  min-height: 50px;
+}
+
+.debug footer {
+  outline: 2px dashed green;
+}
