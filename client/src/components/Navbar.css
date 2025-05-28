@@ -1,73 +1,170 @@
 /* General Navbar Styling */
-.navbar {
-  position: fixed; /* Fix the navbar to the top of the viewport */
-  top: 0; /* Align it to the top */
-  width: 100%; /* Make it span the full width of the page */
-  z-index: 1000; /* Ensure it stays above other content */
-  background-color: #007bff !important; /* Blue background */
-  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
-  padding: 0.5rem 1rem; /* Add padding for spacing */
-  height: 60px; /* Fixed height for the navbar */
-  margin-bottom: 20px; /* Add spacing below the navbar */
-}
-
-/* Navbar Brand/Logo Styling */
-.navbar-brand {
-  color: white !important; /* White text for the brand/logo */
-  font-weight: bold;
-  font-size: 1.2rem;
-  text-transform: uppercase; /* Uppercase branding */
-  letter-spacing: 1px; /* Add spacing between letters for a polished look */
-}
-
-/* Navbar Links Styling */
-.navbar-nav .nav-item .nav-link {
-  color: white !important; /* White text for links */
-  font-size: 0.9rem;
+.custom-navbar {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1050;
+  background-color: #1a237e !important; /* Darker blue for better contrast */
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
   padding: 0.5rem 1rem;
-  transition: color 0.3s ease, background-color 0.3s ease;
-  border-radius: 0.25rem; /* Rounded corners for hover effect */
+  height: 70px; /* Slightly taller for better touch targets */
+  transition: all 0.3s ease;
 }
 
-.navbar-nav .nav-item .nav-link:hover {
-  color: #f0f8ff !important; /* Lighter text on hover */
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.1
-  ) !important; /* Slight background change */
-}
-
-.navbar-nav .nav-item.active .nav-link {
-  color: #f0f8ff !important; /* Highlight active link */
-  font-weight: bold;
-}
-
-/* Logout Button Styling */
-.navbar .btn-danger {
-  background-color: #dc3545 !important; /* Red button */
-  border-color: #dc3545 !important;
-  margin-left: 0.5rem; /* Add spacing between buttons */
-  padding: 0.375rem 0.75rem;
-  font-size: 0.9rem;
-  border-radius: 0.25rem;
-  transition: background-color 0.3s ease, transform 0.3s ease;
-}
-
-.navbar .btn-danger:hover {
-  background-color: #c82333 !important; /* Darker red on hover */
-  transform: scale(1.05); /* Slight zoom effect */
-}
-
-/* Center the Nav Items */
-.navbar .container-fluid {
+/* Brand/Logo Styling */
+.navbar-brand {
+  color: white !important;
+  font-weight: 700;
+  font-size: 1.5rem;
   display: flex;
-  justify-content: space-between; /* Space between brand and links */
-  align-items: center; /* Align vertically */
+  align-items: center;
+  margin-right: 1rem;
 }
 
-/* Padding for the main content to prevent overlap with the navbar */
+.brand-text {
+  color: #ffffff;
+}
+
+.brand-app {
+  color: #4fc3f7;
+  margin-left: 4px;
+}
+
+/* Navbar Toggler Styling */
+.navbar-toggler {
+  border: none;
+  padding: 0.5rem;
+  background: transparent !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.toggler-icon {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background-color: white;
+  margin: 5px 0;
+  transition: all 0.3s ease;
+}
+
+.navbar-toggler[aria-expanded="true"] .toggler-icon:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.navbar-toggler[aria-expanded="true"] .toggler-icon:nth-child(2) {
+  opacity: 0;
+}
+
+.navbar-toggler[aria-expanded="true"] .toggler-icon:nth-child(3) {
+  transform: rotate(-45deg) translate(7px, -6px);
+}
+
+/* Offcanvas Menu Styling */
+.custom-offcanvas {
+  background-color: #1a237e;
+  color: white;
+  width: 280px !important;
+}
+
+.offcanvas-header {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1rem 1.5rem;
+}
+
+.offcanvas-header .btn-close {
+  filter: invert(1);
+  opacity: 0.8;
+}
+
+.offcanvas-title {
+  color: white;
+  font-weight: 600;
+  font-size: 1.3rem;
+}
+
+/* Nav Links Styling */
+.navbar-nav .nav-link {
+  color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 1rem;
+  padding: 0.75rem 1.5rem;
+  margin: 0.15rem 0;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover,
+.navbar-nav .nav-link:focus {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
+}
+
+.navbar-nav .nav-link.active {
+  color: white !important;
+  background-color: rgba(255, 255, 255, 0.1);
+  font-weight: 600;
+}
+
+/* Button Styling */
+.logout-btn-desktop,
+.logout-btn-mobile {
+  font-weight: 500;
+  padding: 0.5rem 1.25rem;
+  margin-left: 1rem;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.logout-btn-desktop {
+  background-color: #d32f2f !important;
+}
+
+.logout-btn-mobile {
+  width: 100%;
+  margin: 1rem 0 0 0;
+  background-color: #d32f2f !important;
+}
+
+.logout-btn-desktop:hover,
+.logout-btn-mobile:hover {
+  background-color: #b71c1c !important;
+  transform: scale(1.03);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 991.98px) {
+  .navbar-nav {
+    padding-top: 1rem;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.75rem 1rem;
+    margin: 0.25rem 0;
+  }
+
+  .logout-btn-mobile {
+    margin-top: 1.5rem;
+  }
+}
+
+@media (min-width: 992px) {
+  .navbar-nav {
+    align-items: center;
+  }
+
+  .navbar-nav .nav-link {
+    padding: 0.5rem 1rem;
+    margin: 0 0.25rem;
+  }
+
+  .custom-navbar {
+    padding: 0.5rem 2rem;
+  }
+}
+
+/* Content Padding to Prevent Overlap */
 .main-content {
-  padding-top: 60px; /* Adjust this value based on the height of your navbar */
+  padding-top: 70px;
 }

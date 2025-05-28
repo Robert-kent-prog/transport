@@ -1,70 +1,94 @@
-// src/components/Navbar.js
-
-import React, { useContext } from 'react';
-import { Container, Nav, Navbar } from 'react-bootstrap'; // Removed NavDropdown
-import { AuthContext } from '../contexts/AuthContext'; // Import AuthContext
-import './Navbar.css'; // Optional: Custom styles
+import React, { useContext, useState } from 'react';
+import { Container, Nav, Navbar, Button, Offcanvas } from 'react-bootstrap';
+import { AuthContext } from '../contexts/AuthContext';
+import './Navbar.css';
 
 const NavbarComponent = () => {
-    const { user, logout } = useContext(AuthContext); // Use AuthContext to check user state
+    const { user, logout } = useContext(AuthContext);
+    const [showOffcanvas, setShowOffcanvas] = useState(false);
+
+    const handleClose = () => setShowOffcanvas(false);
+    const handleShow = () => setShowOffcanvas(true);
 
     return (
-        <Navbar bg="light" expand="lg" fixed="top">
-            <Container>
-                {/* Brand/Logo */}
-                <Navbar.Brand href="/">RideShare App</Navbar.Brand>
+        <Navbar expand="lg" fixed="top" className="custom-navbar">
+            <Container fluid>
+                <Navbar.Brand href="/" className="navbar-brand">
+                    <span className="brand-text">RideShare</span>
+                    <span className="brand-app">App</span>
+                </Navbar.Brand>
 
-                {/* Hamburger Menu Button for Small Screens */}
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
+                <Navbar.Toggle
+                    aria-controls="offcanvasNavbar"
+                    onClick={handleShow}
+                    className="navbar-toggler"
+                >
+                    <span className="toggler-icon"></span>
+                    <span className="toggler-icon"></span>
+                    <span className="toggler-icon"></span>
+                </Navbar.Toggle>
 
-                {/* Collapsible Navbar Content */}
-                <Navbar.Collapse id="basic-navbar-nav">
-                    <Nav className="ms-auto">
-                        {/* Home */}
-                        <Nav.Link href="/">Home</Nav.Link>
+                <Navbar.Offcanvas
+                    id="offcanvasNavbar"
+                    aria-labelledby="offcanvasNavbarLabel"
+                    placement="end"
+                    show={showOffcanvas}
+                    onHide={handleClose}
+                    className="custom-offcanvas"
+                >
+                    <Offcanvas.Header closeButton className="offcanvas-header">
+                        <Offcanvas.Title id="offcanvasNavbarLabel">
+                            RideShare Menu
+                        </Offcanvas.Title>
+                    </Offcanvas.Header>
+                    <Offcanvas.Body>
+                        <Nav className="justify-content-end flex-grow-1 pe-3">
+                            <Nav.Link href="/" onClick={handleClose}>Home</Nav.Link>
 
-                        {/* Conditional Rendering Based on User Authentication */}
-                        {user ? (
-                            <>
-                                {/* Driver Dashboard */}
-                                <Nav.Link href="/dashboard">Driver Dashboard</Nav.Link>
+                            {user ? (
+                                <>
+                                    <Nav.Link href="/dashboard" onClick={handleClose}>Driver Dashboard</Nav.Link>
+                                    <Nav.Link href="/real-time-tracking/:rideId" onClick={handleClose}>Real-Time Tracking</Nav.Link>
+                                    <Nav.Link href="/create-ride" onClick={handleClose}>Create Ride</Nav.Link>
+                                    <Nav.Link href="/passenger-dashboard" onClick={handleClose}>Passenger Dashboard</Nav.Link>
 
-                                {/* Real-Time Tracking */}
-                                <Nav.Link href="/real-time-tracking/:rideId">RealTimeTracking</Nav.Link>
+                                    <div className="d-lg-none">
+                                        <Button
+                                            variant="danger"
+                                            onClick={() => {
+                                                logout();
+                                                handleClose();
+                                            }}
+                                            className="logout-btn-mobile"
+                                        >
+                                            Logout
+                                        </Button>
+                                    </div>
+                                </>
+                            ) : (
+                                <>
+                                    <Nav.Link href="/login" onClick={handleClose}>Login</Nav.Link>
+                                    <Nav.Link href="/register" onClick={handleClose}>Register</Nav.Link>
+                                </>
+                            )}
 
-                                {/* Create Ride */}
-                                <Nav.Link href="/create-ride">Create Ride</Nav.Link>
+                            <Nav.Link href="/about-us" onClick={handleClose}>About Us</Nav.Link>
+                            <Nav.Link href="/contact-us" onClick={handleClose}>Contact Us</Nav.Link>
 
-                                {/* Passenger Dashboard */}
-                                <Nav.Link href="/passenger-dashboard">Passenger Dashboard</Nav.Link>
-
-                                {/* Logout Button */}
-                                <Nav.Link>
-                                    <button
-                                        className="btn btn-danger"
+                            {user && (
+                                <div className="d-none d-lg-block">
+                                    <Button
+                                        variant="danger"
                                         onClick={logout}
-                                        style={{ marginLeft: '0.5rem' }}
+                                        className="logout-btn-desktop"
                                     >
                                         Logout
-                                    </button>
-                                </Nav.Link>
-                            </>
-                        ) : (
-                            <>
-                                {/* Login */}
-                                <Nav.Link href="/login">Login</Nav.Link>
-
-                                {/* Register */}
-                                <Nav.Link href="/register">Register</Nav.Link>
-                            </>
-                        )}
-                        {/* About Us */}
-                        <Nav.Link href="/about-us">About Us</Nav.Link>
-
-                        {/* Contact Us */}
-                        <Nav.Link href="/contact-us">Contact Us</Nav.Link>
-                    </Nav>
-                </Navbar.Collapse>
+                                    </Button>
+                                </div>
+                            )}
+                        </Nav>
+                    </Offcanvas.Body>
+                </Navbar.Offcanvas>
             </Container>
         </Navbar>
     );
