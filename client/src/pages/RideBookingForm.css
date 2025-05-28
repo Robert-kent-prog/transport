@@ -1,0 +1,82 @@
+.ride-booking-container {
+  width: 100%;
+  padding: 0;
+}
+
+.booking-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.booking-form {
+  background: transparent;
+  padding: 0;
+}
+
+.trip-type-toggle {
+  display: flex;
+  justify-content: center;
+}
+
+.trip-type-toggle .btn {
+  padding: 0.5rem 1.5rem;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #495057;
+}
+
+.location-dropdown {
+  width: 100%;
+  text-align: left;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  background-color: white;
+  color: #495057;
+}
+
+.location-dropdown:hover,
+.location-dropdown:focus {
+  background-color: white;
+  color: #495057;
+  border-color: #80bdff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.location-menu {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.date-picker {
+  padding: 0.75rem 1rem;
+  cursor: pointer;
+}
+
+.book-button {
+  padding: 0.75rem 1.5rem;
+  font-weight: 500;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .booking-title {
+    font-size: 1.5rem;
+  }
+
+  .trip-type-toggle {
+    margin-bottom: 1.5rem;
+  }
+
+  .form-label {
+    margin-top: 1rem;
+  }
+}
